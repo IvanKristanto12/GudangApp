@@ -1,0 +1,3 @@
+<?php 
+Stock::CreatePage();
+

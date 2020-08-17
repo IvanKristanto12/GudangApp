@@ -1,0 +1,24 @@
+.checkSize {
+    width:25px;
+    height: 25px;
+}
+
+.foS {
+    width: 100%;
+}
+
+.leftSide{
+    float: left;
+    width: 50%;
+}
+
+.rightSide{
+    /* float: right; */
+    overflow-y: scroll;
+    display: block;
+    height: 79.5%;
+}
+
+.total{
+    text-align: right;
+}

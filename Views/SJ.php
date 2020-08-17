@@ -1,0 +1,2 @@
+<?php
+SJ::CreatePage();
