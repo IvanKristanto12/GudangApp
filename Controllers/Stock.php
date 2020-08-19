@@ -24,6 +24,7 @@ class Stock extends Controller implements ViewInterface
         <link rel="stylesheet" type="text/css" href="Assets/style/tambahmodal.css">
         <link rel="stylesheet" href="Assets/style/w3.css">
         <link rel="stylesheet" href="Assets/style/w3-theme-blue-grey.css">
+        <link rel="icon" href="Assets/image/title-icon.png">
         <title>' . $title . '</title>
         <script src="Assets/script/tambahmodalHead.js"></script>
         </head>';
