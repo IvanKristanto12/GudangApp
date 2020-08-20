@@ -64,7 +64,7 @@ class SJPDF extends FPDF
         $this->SetFont('Arial', '', 12);
 
         for ($i = 0; $i < count($barang); $i++) {
-            $this->Cell(10, 10, $i+1, 1, 0, 'C');
+            $this->Cell(10, 10, $i + 1, 1, 0, 'C');
             $this->Cell(110, 10, $barang[$i][0], 1, 0, 'C');
             $this->Cell(20, 10, $barang[$i][1], 1, 0, 'C');
             $this->Cell(50, 10, $barang[$i][2], 1, 1, 'C');
@@ -86,10 +86,6 @@ class SJPDF extends FPDF
         $this->Cell(45, 10, '(                                    )', 0, 0, 'C');
         $this->Cell(25);
         $this->Cell(50, 10, '(                                    )', 0, 0, 'C');
-
-
-
-
         $this->Output();
     }
 }
@@ -114,7 +110,7 @@ if (isset($_SESSION["SJPDF"])) {
     $pcs = 0;
     $meter = 0;
     for ($i = 0; $i < count($result); $i++) {
-        if (strcmp($result[$i]["Sampel"], $namaSampel) != 0 || strcmp($result[$i]["Warna"], $warna) != 0 ) {
+        if (strcmp($result[$i]["Sampel"], $namaSampel) != 0 || strcmp($result[$i]["Warna"], $warna) != 0) {
             $jenisKain = $result[$i]["Jenis Kain"];
             $namaSampel = $result[$i]["Sampel"];
             $warna = $result[$i]["Warna"];
