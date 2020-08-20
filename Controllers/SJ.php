@@ -33,23 +33,26 @@ class SJ extends Controller implements ViewInterface
     public static function CreateBody()
     {
         echo '<body>';
+        self::CreateHeader();
+        self::CreateNavigationBar();
 
         session_start();
         if (isset($_SESSION["sjDone"])) {
             if ($_SESSION["sjDone"] == true) {
                 echo "<script>createSJPDF = true</script>";
+                echo '<div class="w3-text-black w3-green w3-center w3-border w3-large"><b> BUAT SJ DONE </b></div>';
             }
+            unset($_SESSION["sjDone"]);
         }
-
 
         if (isset($_SESSION["poDone"])) {
             if ($_SESSION["poDone"] == true) {
-                echo "<script>createPOPDF = true</script>";;
+                echo "<script>createPOPDF = true</script>";
+                echo '<div class="w3-text-black w3-green w3-center w3-border w3-large"><b> CETAK PO DONE </b></div>';
             }
+            unset($_SESSION["poDone"]);
         }
 
-        self::CreateHeader();
-        self::CreateNavigationBar();
         self::FormSJ();
         self::CreateFooter();
         echo '</body>';
@@ -62,19 +65,6 @@ class SJ extends Controller implements ViewInterface
 
     public static function FormSJ()
     {
-        if (isset($_SESSION["sjDone"])) {
-            if ($_SESSION["sjDone"] == true) {
-                echo '<div class="w3-text-black w3-green w3-center w3-border w3-large"><b> BUAT SJ DONE </b></div>';
-            }
-        }
-
-
-        if (isset($_SESSION["poDone"])) {
-            if ($_SESSION["poDone"] == true) {
-                echo '<div class="w3-text-black w3-green w3-center w3-border w3-large"><b> CETAK PO DONE </b></div>';
-            }
-        }
-
         //kiri
         echo '
             <div class=" w3-half ">
