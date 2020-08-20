@@ -200,11 +200,16 @@ class Stock extends Controller implements ViewInterface
           <button class="tablink w3-bar-item w3-button" onclick="openCity(event, ' . "'Stock'" . ')">Stock</button>
           <button class="tablink w3-bar-item w3-button" onclick="openCity(event, ' . "'Sampel'" . ')">Sampel</button>
           <button class="tablink w3-bar-item w3-button" onclick="openCity(event, ' . "'Warna'" . ')">Warna</button>
-         </div>';
+          <button class="tablink w3-bar-item w3-button" onclick="openCity(event, ' . "'Penjual'" . ')">Penjual</button>
+          <button class="tablink w3-bar-item w3-button" onclick="openCity(event, ' . "'Pembeli'" . ')">Pembeli</button>
+
+          </div>';
 
         self::tabTambahStock();
         self::tabTambahSampel();
         self::tabTambahWarna();
+        self::tabTambahPenjual();
+        self::tabTambahPembeli();
 
         echo '<div class="w3-container w3-blue w3-padding" style="height:5%">
          
@@ -281,10 +286,69 @@ class Stock extends Controller implements ViewInterface
     private static function tabTambahWarna()
     {
         echo '<div id="Warna" class="w3-container tab tabsize">
-        <form action="StockFormHandler" method="GET">
+        <h4><b>List Warna yang Terdaftar</b></h4>';
+        $result = self::$db->executeQuery("GetListWarna", [""]);
+
+        echo '<table class="w3-table-all">
+            <tr><th>No.</th> <th>Nama</th></tr>';
+        for ($i = 0; $i < count($result); $i++) {
+            echo '<tr><td>'.($i+1).'</td> <td>' . $result[$i]["Nama"] . '</td></tr>';
+        }
+        echo '</table>';
+
+
+        echo '<form action="StockFormHandler" method="GET">
         <h4><b>Nama Warna Baru</b></h4>
-        <input class="w3-input w3-border" type="text" name="inputWarnaBaru" required placeholder="input nama warna baru" onchange="checkWarna()"/> ';
-        echo '<input class="w3-button w3-border w3-center w3-large w3-block w3-margin-top w3-green w3-text-black" value="submit" type="submit" name="submitTambahWarna" />
+        <input class="w3-input w3-border" type="text" name="inputWarnaBaru" required placeholder="input nama warna baru"/> 
+        <input class="w3-button w3-border w3-center w3-large w3-block w3-margin-top w3-green w3-text-black" value="submit" type="submit" name="submitTambahWarna" />
+        </form>
+       </div>';
+    }
+
+    private static function tabTambahPenjual()
+    {
+        echo '<div id="Penjual" class="w3-container tab tabsize">
+        <h4><b>List Penjual yang Terdaftar</b></h4>';
+        $result = self::$db->executeQuery("GetListPenjual", [""]);
+
+        echo '<table class="w3-table-all">
+            <tr><th>No.</th> <th>Nama</th> <th>Kode</th></tr>';
+        for ($i = 0; $i < count($result); $i++) {
+            echo '<tr><td>'.($i+1).'</td> <td>' . $result[$i]["Nama"] . '</td> <td>' . $result[$i]["Kode"] . '</td></tr>';
+        }
+        echo '</table>';
+
+
+        echo '<form action="StockFormHandler" method="GET">
+        <h4><b>Nama Penjual</b></h4>
+        <input class="w3-input w3-border" type="text" name="inputPenjualBaru" required placeholder="input nama penjual"/> 
+        <h4><b>Kode Penjual</b></h4>
+        <input class="w3-input w3-border" type="text" name="inputKodeBaru" required placeholder="input kode penjual"/> 
+        <input class="w3-button w3-border w3-center w3-large w3-block w3-margin-top w3-green w3-text-black" value="submit" type="submit" name="submitTambahPenjual" />
+        </form>
+       </div>';
+    }
+
+    private static function tabTambahPembeli()
+    {
+        echo '<div id="Pembeli" class="w3-container tab tabsize">
+        <h4><b>List Pembeli yang Terdaftar</b></h4>';
+        $result = self::$db->executeQuery("GetListPembeli", [""]);
+
+        echo '<table class="w3-table-all">
+            <tr><th>No.</th> <th>Nama</th> <th>Alamat</th></tr>';
+        for ($i = 0; $i < count($result); $i++) {
+            echo '<tr><td>'.($i+1).'</td> <td>' . $result[$i]["Nama"] . '</td> <td>' . $result[$i]["Alamat"] . '</td></tr>';
+        }
+        echo '</table>';
+
+
+        echo '<form action="StockFormHandler" method="GET">
+        <h4><b>Nama Pembeli</b></h4>
+        <input class="w3-input w3-border" type="text" name="inputPembeliBaru" required placeholder="input nama pembeli"/> 
+        <h4><b>Alamat Pembeli</b></h4>
+        <input class="w3-input w3-border" type="text" name="inputAlamatBaru" required placeholder="input alamat pembeli"/> 
+        <input class="w3-button w3-border w3-center w3-large w3-block w3-margin-top w3-green w3-text-black" value="submit" type="submit" name="submitTambahPembeli" />
         </form>
        </div>';
     }

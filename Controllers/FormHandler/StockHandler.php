@@ -14,16 +14,37 @@ if (isset($_GET['submitTambahStock'])) {
 
     $inputSampelBaru = $_GET['inputSampelBaru'];
     $inputJenisKain = $_GET['inputJenisKain'];
-    $inputWarna ="";
+    $inputWarna = "";
 
     $result = self::$db->executeQuery("GetListWarna", [""]);
-    for($i = 0 ; $i < count($result) ; $i++){
-        if(isset($_GET["warna"][$i])){
-            $inputWarna .= $_GET["warna"][$i].', ';
+    for ($i = 0; $i < count($result); $i++) {
+        if (isset($_GET["warna"][$i])) {
+            $inputWarna .= $_GET["warna"][$i] . ', ';
         }
     }
 
-    self::$db->executeNonQuery("InsertNewSampel", ["'".$inputSampelBaru."'", $inputJenisKain, "'".$inputWarna."'"]);
+    self::$db->executeNonQuery("InsertNewSampel", ["'" . $inputSampelBaru . "'", $inputJenisKain, "'" . $inputWarna . "'"]);
     $_SESSION["done"] = true;
+} else if (isset($_GET['submitTambahWarna'])) {
+    $result = self::$db->executeQuery("InsertWarnaBaru", ["'" . $_GET['inputWarnaBaru'] . "'"]);
+    if ($result[0][""] == 0) {
+        $_SESSION["done"] = false;
+    } else {
+        $_SESSION["done"] = true;
+    }
+} else if (isset($_GET['submitTambahPenjual'])) {
+    $result = self::$db->executeQuery("InsertPenjualBaru", ["'" . $_GET['inputPenjualBaru'] . "'","'" . $_GET['inputKodeBaru'] . "'"]);
+    if ($result[0][""] == 0) {
+        $_SESSION["done"] = false;
+    } else {
+        $_SESSION["done"] = true;
+    }
+}  else if (isset($_GET['submitTambahPembeli'])) {
+    $result = self::$db->executeQuery("InsertPembeliBaru", ["'" . $_GET['inputPembeliBaru'] . "'","'" . $_GET['inputAlamatBaru'] . "'"]);
+    if ($result[0][""] == 0) {
+        $_SESSION["done"] = false;
+    } else {
+        $_SESSION["done"] = true;
+    }
 }
 

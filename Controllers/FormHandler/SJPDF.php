@@ -73,6 +73,21 @@ class SJPDF extends FPDF
         $this->Cell(120, 10, 'Total     ', 1, 0, 'R');
         $this->Cell(20, 10, $totalPcs, 1, 0, 'C');
         $this->Cell(50, 10, $totalMeter, 1, 1, 'C');
+        $this->ln(10);
+        $this->SetFont('Arial', '', 10);
+        $this->Cell(45, 10, 'Pembuat', 0, 0, 'C');
+        $this->Cell(25);
+        $this->Cell(45, 10, 'Disetujui', 0, 0, 'C');
+        $this->Cell(25);
+        $this->Cell(50, 10, 'Pembeli', 0, 1, 'C');
+        $this->ln(15);
+        $this->Cell(45, 10, '(                                    )', 0, 0, 'C');
+        $this->Cell(25);
+        $this->Cell(45, 10, '(                                    )', 0, 0, 'C');
+        $this->Cell(25);
+        $this->Cell(50, 10, '(                                    )', 0, 0, 'C');
+
+
 
 
         $this->Output();

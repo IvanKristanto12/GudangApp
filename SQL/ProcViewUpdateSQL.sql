@@ -282,7 +282,7 @@ END
 	SELECT Id_Warna , Warna
 	FROM ListIdSampelIdWarna
 	WHERE Id_Sampel = @inputIdSampel
-	ORDER BY Id_Warna
+	ORDER BY Warna
 END
 GO
 
@@ -343,6 +343,7 @@ CREATE OR ALTER PROC GetListWarna
 AS
 SELECT *
 FROM Warna
+ORDER BY Nama
 GO
 
 exec GetListWarna
@@ -468,7 +469,71 @@ END
 END
 GO
 
-exec InsertWarnaBaru 'pink'
+exec InsertWarnaBaru 'hitam'
+--------------------------------------------------------------------------------------------------
+/*Procedure No. 19*/
+--insert Penjual Baru
+--@param namaPenjual , kode
+--@return 
+USE GordenDB
+GO
+CREATE OR ALTER PROC InsertPenjualBaru
+	@inputNama VARCHAR(50),
+	@inputKode VARCHAR(50)
+AS
+DECLARE @i INT
+SET @i = (SELECT Id_Penjual
+FROM Penjual
+WHERE Kode LIKE @inputKode)
+IF @i IS NULL
+	BEGIN
+	INSERT INTO Penjual
+		(Nama,Kode)
+	VALUES
+		(@inputNama, @inputKode)
+	SELECT 1
+END
+	ELSE 
+	BEGIN
+	SELECT 0
+END
+GO
+
+exec InsertPenjualBaru 'Seller4' , 'S4'
+
+--------------------------------------------------------------------------------------------------
+/*Procedure No. 20*/
+--insert Pembeli Baru
+--@param namaPembeli , alamat
+--@return 
+USE GordenDB
+GO
+CREATE OR ALTER PROC InsertPembeliBaru
+	@inputNama VARCHAR(50),
+	@inputAlamat VARCHAR(50)
+AS
+DECLARE @i INT
+SET @i = (SELECT Id_Pembeli
+FROM Pembeli
+WHERE Alamat LIKE @inputAlamat AND Nama  LIKE @inputNama)
+IF @i IS NULL
+	BEGIN
+	INSERT INTO Pembeli
+		(Nama,Alamat)
+	VALUES
+		(@inputNama, @inputAlamat)
+	SELECT 1
+END
+	ELSE 
+	BEGIN
+	SELECT 0
+END
+GO
+
+exec InsertPembeliBaru 'Buyer4' , 'Garut'
+
+SELECT * 
+FROM Pembeli
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 /*****List View*****/

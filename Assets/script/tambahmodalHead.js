@@ -13,9 +13,3 @@ function showWarna(idSampel) {
         xmlhttp.send();
     }
 }
-
-function checkWarna(){
-    if(document.getElementById("inputWarna").value == ""){
-        document.getElementById("submitWarnaBaru").disabled = true;
-    }
-}
