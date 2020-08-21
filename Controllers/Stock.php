@@ -32,13 +32,16 @@ class Stock extends Controller implements ViewInterface
 
     public static function CreateBody()
     {
-        echo '<body class="w3-gray">';
+        echo '<body class="">';
         self::CreateHeader();
         self::CreateNavigationBar();
         self::doneText();
         self::modalTambah();
+        echo '<div class="w3-border" style="width:100%; height:75%; overflow-y:scroll">';
         self::listStock();
+        echo '</div>';
         self::CreateFooter();
+       
         echo '</body>';
     }
 
@@ -64,9 +67,9 @@ class Stock extends Controller implements ViewInterface
     {
         $result = self::$db->executeQuery("GetAllPcsAllMeter", [""]);
         echo '
-            <table class="w3-table-all ">
-            <tr class="w3-yellow w3-border">
-                <th colspan="3"class="w3-center">ALL</th>
+            <table class="w3-table-all" >
+            <tr class="w3-yellow w3-border " >
+                <th colspan="3"class="w3-center" >ALL</th>
                 <th class="w3-center">' . $result[0]['All Pcs'] . '</th>
                 <th class="w3-center">' . $result[0]['All Meter'] . '</th>
             </tr>
@@ -86,7 +89,8 @@ class Stock extends Controller implements ViewInterface
                 <th class="w3-center">
                     Total Meter
                 </th>
-            </tr>';
+            </tr>
+            ';
 
         $result = self::$db->executeQuery("GetListSampel", [""]);
         for ($i = 0; $i < count($result); $i++) {
