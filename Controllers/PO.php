@@ -72,7 +72,7 @@ class PO extends Controller implements ViewInterface
                 <option value="" disabled selected>Pilih Penjual</option>';
         $result = self::$db->executeQuery("GetListPenjual", [""]);
         for ($i = 0; $i < count($result); $i++) {
-            echo '<option value="' . $result[$i]["Id_Penjual"] . '">' . $result[$i]["Nama"] . '</option>';
+            echo '<option value="' . $result[$i]["Id_Penjual"] . '">' . $result[$i]["Nama"] . ' - '. $result[$i]["Kode"] . '</option>';
         }
         echo '        
             </select> 

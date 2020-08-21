@@ -23,7 +23,6 @@ class POPDF extends FPDF
             $this->SetFont('Arial', 'B', 15);
             $this->Cell(6, 0.6, $this->noPO, 1, 0, 'C');
             $this->Ln(0.8);
-
         }
     }
 
@@ -38,11 +37,11 @@ class POPDF extends FPDF
             // Page number
             $this->Cell(0, 10, 'Page ' . $this->PageNo() . '/{nb}', 0, 0, 'C');
         } else {
-            $this->SetY(-1);
+            $this->SetY(-0.5);
             // Arial italic 8
             $this->SetFont('Arial', 'I', 8);
             // Page number
-            $this->Cell(0, 1, 'Page ' . $this->PageNo() . '/{nb}', 0, 0, 'C');
+            $this->Cell(0, 0.5, 'Page ' . $this->PageNo() . '/{nb}', 0, 0, 'C');
         }
     }
 
