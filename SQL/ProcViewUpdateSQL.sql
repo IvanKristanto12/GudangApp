@@ -146,7 +146,7 @@ FROM @a as a
 ORDER BY b.Warna
 GO
 
-exec GetListWarnaSampel 'Gorila'
+exec GetListWarnaSampel 'Anjing'
 
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 6*/
@@ -532,8 +532,38 @@ GO
 
 exec InsertPembeliBaru 'Buyer4' , 'Garut'
 
-SELECT * 
-FROM Pembeli
+--------------------------------------------------------------------------------------------------
+/*Procedure No. 21*/
+--GetStock
+--@param 
+--@return 
+USE GordenDB
+GO
+CREATE OR ALTER PROC GetStock
+AS
+DECLARE @a TABLE (Sampel VARCHAR(50),
+	Warna VARCHAR(50),
+	NomorWarna INT,
+	TotalPcs INT,
+	TotalMeter FLOAT)
+INSERT INTO @a
+SELECT Sampel.Nama, Warna.Nama, Warna.NomorWarna, COUNT(Kain.Id_Kain) as 'TotalPcs' , SUM(Kain.Meter) as 'TotalMeter'
+FROM Kain
+	JOIN KainSampelWarna on Kain.Id_Kain = KainSampelWarna.Id_Kain
+	JOIN Sampel on Sampel.Id_Sampel = KainSampelWarna.Id_Sampel
+	JOIN Warna on Warna.Id_Warna = KainSampelWarna.Id_Warna
+WHERE Status = 1
+GROUP BY Sampel.Nama, Warna.Nama , Warna.NomorWarna
+ORDER BY Sampel.Nama, Warna.Nama , Warna.NomorWarna
+
+SELECT ListSampelWarna.Sampel, ListSampelWarna.Warna, a.NomorWarna, a.TotalPcs, a.TotalMeter
+FROM @a as a
+RIGHT OUTER JOIN ListSampelWarna ON ListSampelWarna.Sampel = a.Sampel AND ListSampelWarna.Warna = a.Warna
+ORDER BY ListSampelWarna.Sampel , ListSampelWarna.Warna
+GO
+
+exec GetStock
+
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 /*****List View*****/
@@ -600,7 +630,7 @@ USE GordenDB
 GO
 CREATE OR ALTER VIEW ListSampelWarna
 AS
-	SELECT Sampel.Nama as 'Sampel', Warna.Nama as 'Warna'
+	SELECT Sampel.Nama as 'Sampel', Warna.Nama as 'Warna', Warna.NomorWarna as 'NomorWarna'
 	FROM SampelWarna
 		JOIN Sampel ON Sampel.Id_Sampel = SampelWarna.Id_Sampel
 		JOIN Warna ON Warna.Id_Warna = SampelWarna.Id_Warna

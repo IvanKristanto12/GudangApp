@@ -37,11 +37,15 @@ class Stock extends Controller implements ViewInterface
         self::CreateNavigationBar();
         self::doneText();
         self::modalTambah();
+
         echo '<div class="w3-border" style="width:100%; height:75%; overflow-y:scroll">';
-        self::listStock();
+        // self::listStock();
+        self::listStockExcel();
+
         echo '</div>';
+
         self::CreateFooter();
-       
+
         echo '</body>';
     }
 
@@ -63,6 +67,54 @@ class Stock extends Controller implements ViewInterface
         session_destroy();
     }
 
+    private static function listStockExcel()
+    {
+        echo '<table class="w3-table w3-border">
+            <tr class="w3-text-black">
+                <th class="w3-center w3-border">NAMA BARANG</th>
+                <th class="w3-center w3-border" colspan="2">WARNA</th>
+                <th class="w3-center w3-border">PCS</th>
+                <th class="w3-center w3-border">METER</th>
+                <th class="w3-center w3-border" colspan="2">TOTAL</th>
+            </tr>';
+        $result = self::$db->executeQuery("GetStock", [""]);
+        $nama = "";
+        for ($i = 0; $i < count($result); $i++) {
+            if (strcmp($nama, $result[$i]["Sampel"]) != 0) {
+                $nama = $result[$i]["Sampel"];
+                
+                echo '
+                <tr>
+                    <th class="w3-border  " colspan="7"></th>
+                </tr>
+                <tr>
+                    <th class="w3-border w3-light-green w3-text-black " colspan="7">'.$result[$i]["Sampel"].'</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th class="w3-center w3-border">'.$result[$i]["NomorWarna"].'</th>
+                    <th class="w3-center w3-border">'.$result[$i]["Warna"].'</th>
+                    <th class="w3-center w3-border">'.$result[$i]["TotalPcs"].'</th>
+                    <th class="w3-center w3-border">'.$result[$i]["TotalMeter"].'</th>
+                    <th class="w3-center w3-border"></th>
+                    <th class="w3-center w3-border"></th>
+                </tr>';
+            } else {
+                echo '
+                <tr>
+                    <th></th>
+                    <th class="w3-center w3-border">'.$result[$i]["NomorWarna"].'</th>
+                    <th class="w3-center w3-border">'.$result[$i]["Warna"].'</th>
+                    <th class="w3-center w3-border">'.$result[$i]["TotalPcs"].'</th>
+                    <th class="w3-center w3-border">'.$result[$i]["TotalMeter"].'</th>
+                    <th class="w3-center w3-border"></th>
+                    <th class="w3-center w3-border"></th>
+                </tr>';
+            }
+        }
+        echo '</table>';
+    }
+
     private static function listStock()
     {
         $result = self::$db->executeQuery("GetAllPcsAllMeter", [""]);
@@ -81,7 +133,7 @@ class Stock extends Controller implements ViewInterface
                     Sampel
                 </th>
                 <th class="w3-center">
-                    Jenis Kain
+                    Tipe
                 </th>
                 <th class="w3-center">
                     Total Pcs
@@ -296,7 +348,7 @@ class Stock extends Controller implements ViewInterface
         echo '<table class="w3-table-all">
             <tr><th>No.</th> <th>Nama</th></tr>';
         for ($i = 0; $i < count($result); $i++) {
-            echo '<tr><td>'.($i+1).'</td> <td>' . $result[$i]["Nama"] . '</td></tr>';
+            echo '<tr><td>' . ($i + 1) . '</td> <td>' . $result[$i]["Nama"] . '</td></tr>';
         }
         echo '</table>';
 
@@ -318,7 +370,7 @@ class Stock extends Controller implements ViewInterface
         echo '<table class="w3-table-all">
             <tr><th>No.</th> <th>Nama</th> <th>Kode</th></tr>';
         for ($i = 0; $i < count($result); $i++) {
-            echo '<tr><td>'.($i+1).'</td> <td>' . $result[$i]["Nama"] . '</td> <td>' . $result[$i]["Kode"] . '</td></tr>';
+            echo '<tr><td>' . ($i + 1) . '</td> <td>' . $result[$i]["Nama"] . '</td> <td>' . $result[$i]["Kode"] . '</td></tr>';
         }
         echo '</table>';
 
@@ -342,7 +394,7 @@ class Stock extends Controller implements ViewInterface
         echo '<table class="w3-table-all">
             <tr><th>No.</th> <th>Nama</th> <th>Alamat</th></tr>';
         for ($i = 0; $i < count($result); $i++) {
-            echo '<tr><td>'.($i+1).'</td> <td>' . $result[$i]["Nama"] . '</td> <td>' . $result[$i]["Alamat"] . '</td></tr>';
+            echo '<tr><td>' . ($i + 1) . '</td> <td>' . $result[$i]["Nama"] . '</td> <td>' . $result[$i]["Alamat"] . '</td></tr>';
         }
         echo '</table>';
 

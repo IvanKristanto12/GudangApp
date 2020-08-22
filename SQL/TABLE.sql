@@ -42,7 +42,8 @@ CREATE TABLE JenisKain
 CREATE TABLE Warna
 (
 	Id_Warna INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
-	Nama VARCHAR(50) NOT NULL
+	Nama VARCHAR(50) NOT NULL,
+	NomorWarna INT
 )
 
 CREATE TABLE Sampel
@@ -92,8 +93,6 @@ CREATE TABLE ListKainPO
 	StatusRetur TINYINT NOT NULL,
 	PRIMARY KEY	(No_PO,Id_Kain)
 )
-
-
 
 --------------------------------------------------------------------------------------------------
 /*Query Data Dummy*/
@@ -164,6 +163,12 @@ INSERT INTO Warna
 VALUES('MERAH')
 INSERT INTO Warna
 	(Nama)
+VALUES('MERAH TUA')
+INSERT INTO Warna
+	(Nama)
+VALUES('PINK')
+INSERT INTO Warna
+	(Nama)
 VALUES('KUNING')
 INSERT INTO Warna
 	(Nama)
@@ -182,10 +187,13 @@ INSERT INTO Warna
 VALUES('GOLD')
 INSERT INTO Warna
 	(Nama)
-VALUES('KREM')
+VALUES('SILVER')
 INSERT INTO Warna
 	(Nama)
-VALUES('COKLAT SUSU')
+VALUES('CREAM')
+INSERT INTO Warna
+	(Nama)
+VALUES('COKLAT MUDA')
 INSERT INTO Warna
 	(Nama)
 VALUES('COKLAT TUA')
@@ -195,7 +203,12 @@ VALUES('BRICK')
 INSERT INTO Warna
 	(Nama)
 VALUES('BIRU')
-
+INSERT INTO Warna
+	(Nama)
+VALUES('GOLD TANGKAI HIJAU')
+INSERT INTO Warna
+	(Nama)
+VALUES('GOLD TANGKAI COKLAT')
 
 INSERT INTO Pembeli
 	( Nama, Alamat)
@@ -221,35 +234,111 @@ VALUES('Seller3' , 'S3')
 INSERT INTO JenisKain
 	(Nama)
 VALUES
-	('Vitrase Printing')
+	('EMBOSS 3D')
 INSERT INTO JenisKain
 	(Nama)
 VALUES
-	('Vitrase Printing Mas')
+	('EMBOSS FOIL')
 INSERT INTO JenisKain
 	(Nama)
 VALUES
-	('Blackout Printing Emboss')
+	('EMBOSS LASER')
 INSERT INTO JenisKain
 	(Nama)
 VALUES
-	('Blackout Printing Emboss Laser')
+	('EMBOSS PITA')
 INSERT INTO JenisKain
 	(Nama)
 VALUES
-	('Blackout Printing Flocking')
+	('FLOCKING')
 INSERT INTO JenisKain
 	(Nama)
 VALUES
-	('Blackout Printing Mas')
+	('JAKAT PRINT')
 INSERT INTO JenisKain
 	(Nama)
 VALUES
-	('Blackout Printing Mas Beludru')
+	('JAQUARD')
 INSERT INTO JenisKain
 	(Nama)
 VALUES
-	('Jakat Print')
+	('JAQUARD FLOCKING')
+INSERT INTO JenisKain
+	(Nama)
+VALUES
+	('JAQUARD KARUNG')
+INSERT INTO JenisKain
+	(Nama)
+VALUES
+	('KIDS COLLECTION')
+INSERT INTO JenisKain
+	(Nama)
+VALUES
+	('PRINT BLUDRU FOIL')
+INSERT INTO JenisKain
+	(Nama)
+VALUES
+	('PRINT DASAR PUTIH')
+INSERT INTO JenisKain
+	(Nama)
+VALUES
+	('PRINT MAS')
+INSERT INTO JenisKain
+	(Nama)
+VALUES
+	('PRINT MAS BLUDRU')
+INSERT INTO JenisKain
+	(Nama)
+VALUES
+	('PRINT MAS BLUDRU WO')
+INSERT INTO JenisKain
+	(Nama)
+VALUES
+	('PRINT MAS CERAH')
+INSERT INTO JenisKain
+	(Nama)
+VALUES
+	('PRINT MAS DASAR PUTIH')
+INSERT INTO JenisKain
+	(Nama)
+VALUES
+	('PRINT MAS FOIL')
+INSERT INTO JenisKain
+	(Nama)
+VALUES
+	('PRINTING MAS EMBOSS')
+INSERT INTO JenisKain
+	(Nama)
+VALUES
+	('RESTU IBU')
+INSERT INTO JenisKain
+	(Nama)
+VALUES
+	('V PRINTING')
+INSERT INTO JenisKain
+	(Nama)
+VALUES
+	('VITRASE BORDIR')
+INSERT INTO JenisKain
+	(Nama)
+VALUES
+	('VITRASE FLOCKING')
+INSERT INTO JenisKain
+	(Nama)
+VALUES
+	('VITRASE FOIL')
+INSERT INTO JenisKain
+	(Nama)
+VALUES
+	('VITRASE KIDS COLLECTION')
+INSERT INTO JenisKain
+	(Nama)
+VALUES
+	('VITRASE MASTER / FH')
+INSERT INTO JenisKain
+	(Nama)
+VALUES
+	('VITRASE PRINTING')
 
 INSERT INTO Sampel
 	(Nama, Id_JenisKain)

@@ -31,7 +31,7 @@ class Controller extends Database
     public static function CreateFooter()
     {
         echo '
-        <footer class="w3-container w3-theme-d2 w3-padding w3-display-bottommiddle" style=" width:100%; height:4%";>
+        <footer class="w3-container w3-theme-d2 w3-padding w3-display-bottommiddle" style=" width:100%; height:2%";>
         </footer>';
     }
 
