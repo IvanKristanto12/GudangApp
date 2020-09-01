@@ -20,7 +20,7 @@ class Stock extends Controller implements ViewInterface
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <!-- <meta http-equiv="refresh" content="1"> -->
-        <link rel="stylesheet" type="text/css" href="Assets/style/style.css">
+        <link rel="stylesheet" type="text/css" href="Assets/style/stock.css">
         <link rel="stylesheet" type="text/css" href="Assets/style/tambahmodal.css">
         <link rel="stylesheet" href="Assets/style/w3.css">
         <link rel="stylesheet" href="Assets/style/w3-theme-blue-grey.css">
@@ -37,21 +37,14 @@ class Stock extends Controller implements ViewInterface
         self::CreateNavigationBar();
         self::doneText();
         self::modalTambah();
-
-        echo '<div class="w3-border" style="width:100%; height:75%; overflow-y:scroll">';
         // self::listStock();
         self::listStockExcel();
-
-        echo '</div>';
-
         self::CreateFooter();
-
         echo '</body>';
     }
 
     public static function CreatePage()
     {
-
         self::CreateHTML(self::CreateHead(), self::CreateBody());
     }
 
@@ -69,50 +62,96 @@ class Stock extends Controller implements ViewInterface
 
     private static function listStockExcel()
     {
-        echo '<table class="w3-table w3-border">
+        echo '
+        <table class="w3-table w3-border">
             <tr class="w3-text-black">
-                <th class="w3-center w3-border">NAMA BARANG</th>
-                <th class="w3-center w3-border" colspan="2">WARNA</th>
-                <th class="w3-center w3-border">PCS</th>
-                <th class="w3-center w3-border">METER</th>
-                <th class="w3-center w3-border" colspan="2">TOTAL</th>
-            </tr>';
+                <th class="w3-center w3-border column1">NAMA BARANG</th>
+                <th class="w3-center w3-border column2" colspan="2">WARNA</th>
+                <th class="w3-center w3-border column3">PCS</th>
+                <th class="w3-center w3-border column4">METER</th>
+                <th class="w3-center w3-border column5" colspan="2">TOTAL</th>
+            </tr>
+        </table>
+        <div class="w3-border" style="width:100%; height:71%; overflow-y:scroll">
+        <table class="w3-table w3-border">';
         $result = self::$db->executeQuery("GetStock", [""]);
         $nama = "";
+        $sumPcs = 0;
+        $sumMeter = 0;
         for ($i = 0; $i < count($result); $i++) {
+            $nomorWarna = $result[$i]["NomorWarna"];
+            $warna = $result[$i]["Warna"];
+            $totalPcs = $result[$i]["TotalPcs"];
+            $totalMeter = $result[$i]["TotalMeter"];
+
+            if ($totalPcs == null) {
+                $totalPcs = 0;
+                $totalMeter = 0;
+            }
+
+
             if (strcmp($nama, $result[$i]["Sampel"]) != 0) {
                 $nama = $result[$i]["Sampel"];
-                
-                echo '
-                <tr>
-                    <th class="w3-border  " colspan="7"></th>
+                if ($i != 0) {
+                    echo '
+                    <tr>
+                        <th class="column1"></th>
+                        <th class="w3-center w3-border columnWarna"></th>
+                        <th class="w3-center w3-border columnWarna"></th>
+                        <th class="w3-center w3-border column3"></th>
+                        <th class="w3-center w3-border column4"></th>
+                        <th class="w3-center w3-border columnTotal">' . $sumPcs . '</th>
+                        <th class="w3-center w3-border columnTotal">' . $sumMeter . '</th>
+                    </tr>
+                    <tr>
+                        <th class="w3-border  " colspan="7"></th>
+                    </tr>';
+                    $sumPcs = 0;
+                    $sumMeter = 0;
+                }
+                $sumPcs += $totalPcs;
+                $sumMeter += $totalMeter;
+                echo '<tr>
+                    <th class="w3-border w3-light-green w3-text-black " colspan="7">' . $result[$i]["Sampel"] . '</th>
                 </tr>
                 <tr>
-                    <th class="w3-border w3-light-green w3-text-black " colspan="7">'.$result[$i]["Sampel"].'</th>
-                </tr>
-                <tr>
-                    <th></th>
-                    <th class="w3-center w3-border">'.$result[$i]["NomorWarna"].'</th>
-                    <th class="w3-center w3-border">'.$result[$i]["Warna"].'</th>
-                    <th class="w3-center w3-border">'.$result[$i]["TotalPcs"].'</th>
-                    <th class="w3-center w3-border">'.$result[$i]["TotalMeter"].'</th>
-                    <th class="w3-center w3-border"></th>
-                    <th class="w3-center w3-border"></th>
+                    <th class="column1"></th>
+                    <th class="w3-center w3-border columnWarna">' . $nomorWarna . '</th>
+                    <th class="w3-center w3-border columnWarna">' . $warna . '</th>
+                    <th class="w3-center w3-border column3">' . $totalPcs . '</th>
+                    <th class="w3-center w3-border column4">' . $totalMeter . '</th>
+                    <th class="w3-center w3-border columnTotal"></th>
+                    <th class="w3-center w3-border columnTotal"></th>
                 </tr>';
             } else {
+                $sumPcs += $totalPcs;
+                $sumMeter += $totalMeter;
                 echo '
                 <tr>
                     <th></th>
-                    <th class="w3-center w3-border">'.$result[$i]["NomorWarna"].'</th>
-                    <th class="w3-center w3-border">'.$result[$i]["Warna"].'</th>
-                    <th class="w3-center w3-border">'.$result[$i]["TotalPcs"].'</th>
-                    <th class="w3-center w3-border">'.$result[$i]["TotalMeter"].'</th>
+                    <th class="w3-center w3-border">' . $nomorWarna . '</th>
+                    <th class="w3-center w3-border">' . $warna . '</th>
+                    <th class="w3-center w3-border">' . $totalPcs . '</th>
+                    <th class="w3-center w3-border">' . $totalMeter . '</th>
                     <th class="w3-center w3-border"></th>
                     <th class="w3-center w3-border"></th>
                 </tr>';
             }
         }
-        echo '</table>';
+        echo '
+            <tr>
+                <th class="column1"></th>
+                <th class="w3-center w3-border columnWarna"></th>
+                <th class="w3-center w3-border columnWarna"></th>
+                <th class="w3-center w3-border column3"></th>
+                <th class="w3-center w3-border column4"></th>
+                <th class="w3-center w3-border columnTotal">' . $sumPcs . '</th>
+                <th class="w3-center w3-border columnTotal">' . $sumMeter . '</th>
+            </tr>
+            <tr>
+                <th class="w3-border  " colspan="7"></th>
+            </tr>';
+        echo '</table></div>';
     }
 
     private static function listStock()
@@ -243,7 +282,7 @@ class Stock extends Controller implements ViewInterface
 
     private static function modalTambah()
     {
-        echo '<button class="w3-button w3-blue w3-border w3-text-black w3-xlarge" onclick="document.getElementById(' . "'id01'" . ').style.display=' . "'block'" . '" >Tambah</button>';
+        echo '<button class="w3-button w3-blue w3-border w3-text-black w3-large" onclick="document.getElementById(' . "'id01'" . ').style.display=' . "'block'" . '" >Tambah</button>';
         echo '<div id="id01" class="w3-modal">
         <div class="w3-modal-content w3-card-4 w3-animate-zoom">
          <header class="w3-container w3-blue w3-text-black"> 
