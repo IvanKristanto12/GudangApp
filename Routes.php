@@ -22,6 +22,10 @@ Route::set('sj', function () {
     SJ::CreateView('SJ');
 });
 
+Route::set('alllist', function () {
+    SJ::CreateView('AllList');
+});
+
 //Function
 Route::set('getListWarna', function () {
     AJAX::getListWarna();

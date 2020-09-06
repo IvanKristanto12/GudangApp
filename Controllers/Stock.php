@@ -8,6 +8,8 @@ class Stock extends Controller implements ViewInterface
         <a href="stock" class="w3-bar-item w3-button w3-gray">Stock</a>
         <a href="po" class="w3-bar-item w3-button">PO</a>
         <a href="sj" class="w3-bar-item w3-button">SJ</a>
+        <a href="alllist" class="w3-bar-item w3-button ">AllList</a>
+
         </div>';
     }
 

@@ -605,6 +605,23 @@ END
 GO
 
 exec InsertJenisKainBaru 'Vitrase' 
+--------------------------------------------------------------------------------------------------
+/*Procedure No. 23*/
+--Get List All
+--@param 
+--@return 
+USE GordenDB
+GO
+CREATE OR ALTER PROC GetListAll
+AS
+
+SELECT PurchaseOrder.No_PO, PurchaseOrder.Tanggal as 'Tanggal PO', No_SJ, SuratJalan.Tanggal as 'Tanggal SJ', Kode
+FROM PurchaseOrder 
+	JOIN SuratJalan on SuratJalan.No_PO = PurchaseOrder.No_PO
+	JOIN Penjual on Penjual.Id_Penjual = PurchaseOrder.Id_Penjual
+GO
+
+exec GetListAll
 
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
