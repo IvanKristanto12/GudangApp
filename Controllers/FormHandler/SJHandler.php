@@ -7,10 +7,12 @@ if (isset($_GET["Cetak"])) {
 } else if (isset($_GET["submitCreateSJ"])) {
     $inputTanggal = $_GET["inputTanggalSJ"];
     $inputNoPO = $_GET["inputNoPO"];
+    $inputKeterangan = $_GET["inputKeterangan"];
 
-    self::$db->executeNonQuery("CreateSJ", ["'".$inputTanggal."'", $inputNoPO]);
+    self::$db->executeNonQuery("CreateSJ", ["'".$inputTanggal."'", $inputNoPO, "'".$inputKeterangan."'"]);
 
     $result = self::$db->executeQuery("GetDetailPO", [$inputNoPO]);
     $_SESSION["SJPDF"] = $result;
+    $_SESSION["SJKet"] = $inputKeterangan;
     $_SESSION["sjDone"] = true;
 }

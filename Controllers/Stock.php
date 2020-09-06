@@ -129,12 +129,12 @@ class Stock extends Controller implements ViewInterface
                 echo '
                 <tr>
                     <th></th>
-                    <th class="w3-center w3-border">' . $nomorWarna . '</th>
-                    <th class="w3-center w3-border">' . $warna . '</th>
-                    <th class="w3-center w3-border">' . $totalPcs . '</th>
-                    <th class="w3-center w3-border">' . $totalMeter . '</th>
-                    <th class="w3-center w3-border"></th>
-                    <th class="w3-center w3-border"></th>
+                    <th class="w3-center w3-border columnWarna">' . $nomorWarna . '</th>
+                    <th class="w3-center w3-border columnWarna">' . $warna . '</th>
+                    <th class="w3-center w3-border column3">' . $totalPcs . '</th>
+                    <th class="w3-center w3-border column4">' . $totalMeter . '</th>
+                    <th class="w3-center w3-border columnTotal"></th>
+                    <th class="w3-center w3-border columnTotal"></th>
                 </tr>';
             }
         }
@@ -295,6 +295,7 @@ class Stock extends Controller implements ViewInterface
           <button class="tablink w3-bar-item w3-button" onclick="openCity(event, ' . "'Stock'" . ')">Stock</button>
           <button class="tablink w3-bar-item w3-button" onclick="openCity(event, ' . "'Sampel'" . ')">Sampel</button>
           <button class="tablink w3-bar-item w3-button" onclick="openCity(event, ' . "'Warna'" . ')">Warna</button>
+          <button class="tablink w3-bar-item w3-button" onclick="openCity(event, ' . "'JenisKain'" . ')">Jenis Kain</button>
           <button class="tablink w3-bar-item w3-button" onclick="openCity(event, ' . "'Penjual'" . ')">Penjual</button>
           <button class="tablink w3-bar-item w3-button" onclick="openCity(event, ' . "'Pembeli'" . ')">Pembeli</button>
 
@@ -303,6 +304,7 @@ class Stock extends Controller implements ViewInterface
         self::tabTambahStock();
         self::tabTambahSampel();
         self::tabTambahWarna();
+        self::tabTambahJenisKain();
         self::tabTambahPenjual();
         self::tabTambahPembeli();
 
@@ -385,9 +387,9 @@ class Stock extends Controller implements ViewInterface
         $result = self::$db->executeQuery("GetListWarna", [""]);
 
         echo '<table class="w3-table-all">
-            <tr><th>No.</th> <th>Nama</th></tr>';
+            <tr><th>No.</th> <th>Nama</th> <th>Nomor Warna</th></tr>';
         for ($i = 0; $i < count($result); $i++) {
-            echo '<tr><td>' . ($i + 1) . '</td> <td>' . $result[$i]["Nama"] . '</td></tr>';
+            echo '<tr><td>' . ($i + 1) . '</td> <td>' . $result[$i]["Nama"] . '</td> <td> '.$result[$i]["NomorWarna"].'</td></tr>';
         }
         echo '</table>';
 
@@ -395,6 +397,8 @@ class Stock extends Controller implements ViewInterface
         echo '<form action="StockFormHandler" method="GET">
         <h4><b>Nama Warna Baru</b></h4>
         <input class="w3-input w3-border" type="text" name="inputWarnaBaru" required placeholder="input nama warna baru"/> 
+        <h4><b>Nomor Warna Baru</b></h4>
+        <input class="w3-input w3-border" type="number" name="inputNomorBaru" min="0" value="0" placeholder="input nomor warna baru"/> 
         <input class="w3-button w3-border w3-center w3-large w3-block w3-margin-top w3-green w3-text-black" value="submit" type="submit" name="submitTambahWarna" />
         </form>
        </div>';
@@ -444,6 +448,28 @@ class Stock extends Controller implements ViewInterface
         <h4><b>Alamat Pembeli</b></h4>
         <input class="w3-input w3-border" type="text" name="inputAlamatBaru" required placeholder="input alamat pembeli"/> 
         <input class="w3-button w3-border w3-center w3-large w3-block w3-margin-top w3-green w3-text-black" value="submit" type="submit" name="submitTambahPembeli" />
+        </form>
+       </div>';
+    }
+
+    private static function tabTambahJenisKain()
+    {
+        echo '<div id="JenisKain" class="w3-container tab tabsize">
+        <h4><b>List Jenis Kain yang Terdaftar</b></h4>';
+        $result = self::$db->executeQuery("GetListJenisKain", [""]);
+
+        echo '<table class="w3-table-all">
+            <tr><th>No.</th> <th>Nama</th></tr>';
+        for ($i = 0; $i < count($result); $i++) {
+            echo '<tr><td>' . ($i + 1) . '</td> <td>' . $result[$i]["Nama"] . '</td> </tr>';
+        }
+        echo '</table>';
+
+
+        echo '<form action="StockFormHandler" method="GET">
+        <h4><b>Nama Jenis Kain</b></h4>
+        <input class="w3-input w3-border" type="text" name="inputJenisKainBaru" required placeholder="input nama jenis kain"/> 
+        <input class="w3-button w3-border w3-center w3-large w3-block w3-margin-top w3-green w3-text-black" value="submit" type="submit" name="submitTambahJenisKain" />
         </form>
        </div>';
     }

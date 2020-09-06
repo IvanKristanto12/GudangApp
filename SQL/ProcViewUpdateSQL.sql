@@ -182,9 +182,9 @@ SET @totalPcs = 0
 SET @totalMeter = 0
 
 INSERT INTO PurchaseOrder
-	(Tanggal,Id_Penjual,Id_Pembeli,Total_Pcs,Total_Meter)
+	(Tanggal,Id_Penjual,Id_Pembeli,Total_Pcs,Total_Meter,Status)
 VALUES
-	(@inputTanggal, @inputPenjual, @inputPembeli, @totalPcs, @totalMeter)
+	(@inputTanggal, @inputPenjual, @inputPembeli, @totalPcs, @totalMeter,0)
 
 SET @noPO = (SELECT MAX(No_PO)
 FROM PurchaseOrder)
@@ -420,6 +420,7 @@ CREATE OR ALTER PROC GetListPO
 AS
 SELECT *
 FROM PurchaseOrder
+WHERE Status =  0
 GO
 
 exec GetListPO
@@ -432,15 +433,18 @@ USE GordenDB
 GO
 CREATE OR ALTER PROC CreateSJ
 	@inputTanggal DATE ,
-	@inputNoPO INT
+	@inputNoPO INT,
+	@inputKeterangan VARCHAR(500)
 AS
 INSERT INTO SuratJalan
-	(Tanggal,No_PO)
+	(Tanggal,No_PO,Keterangan)
 VALUES
-	( CAST(@inputTanggal as DATE) , @inputNoPO)
+	( CAST(@inputTanggal as DATE) , @inputNoPO , @inputKeterangan)
+
+UPDATE PurchaseOrder SET Status = 1 WHERE No_PO = @inputNoPO
 GO
 
-exec CreateSJ '2020-08-30',1
+exec CreateSJ '2020-08-30',1,''
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 18*/
 --insert Warna Baru
@@ -449,18 +453,27 @@ exec CreateSJ '2020-08-30',1
 USE GordenDB
 GO
 CREATE OR ALTER PROC InsertWarnaBaru
-	@inputNama VARCHAR(50)
+	@inputNama VARCHAR(50), @inputNomorBaru INT
 AS
-DECLARE @i INT
-SET @i = (SELECT Id_Warna
+DECLARE @i VARCHAR(50)
+IF @inputNomorBaru = 0
+BEGIN
+SET @i = (SELECT DISTINCT Nama
 FROM Warna
 WHERE Nama LIKE UPPER(@inputNama))
+END
+ELSE 
+BEGIN
+SET @i = (SELECT Id_Warna
+FROM Warna
+WHERE Nama LIKE UPPER(@inputNama) AND NomorWarna = @inputNomorBaru)
+END
 IF @i IS NULL
 	BEGIN
 	INSERT INTO Warna
-		(Nama)
+		(Nama , NomorWarna)
 	VALUES
-		(UPPER(@inputNama))
+		(UPPER(@inputNama) , @inputNomorBaru)
 	SELECT 1
 END
 	ELSE 
@@ -469,7 +482,7 @@ END
 END
 GO
 
-exec InsertWarnaBaru 'hitam'
+exec InsertWarnaBaru 'hitam',10
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 19*/
 --insert Penjual Baru
@@ -563,6 +576,35 @@ ORDER BY ListSampelWarna.Sampel , ListSampelWarna.Warna
 GO
 
 exec GetStock
+--------------------------------------------------------------------------------------------------
+/*Procedure No. 22*/
+--insert Jenis Kain Baru
+--@param namaJenisKain
+--@return 
+USE GordenDB
+GO
+CREATE OR ALTER PROC InsertJenisKainBaru
+	@inputJenisKain VARCHAR(50)
+AS
+DECLARE @i INT
+SET @i = (SELECT Id_JenisKain
+FROM JenisKain
+WHERE Nama LIKE UPPER(@inputJenisKain))
+IF @i IS NULL
+	BEGIN
+	INSERT INTO JenisKain
+		(Nama)
+	VALUES
+		(UPPER(@inputJenisKain))
+	SELECT 1
+END
+	ELSE 
+	BEGIN
+	SELECT 0
+END
+GO
+
+exec InsertJenisKainBaru 'Vitrase' 
 
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
@@ -680,6 +722,10 @@ FROM ListKainPO
 SELECT *
 FROM SuratJalan
 
+USE GordenDB
+GO
+CREATE OR ALTER PROC resetDatabase
+AS
 --remove data
 DELETE FROM ListKainPO
 DELETE FROM SampelWarna
@@ -694,8 +740,6 @@ DELETE FROM Penjual
 DELETE FROM Sampel
 DELETE FROM JenisKain
 
-
-
 --autoincrement jdi 1
 DBCC CHECKIDENT(Users,RESEED,0)
 DBCC CHECKIDENT(Kain,RESEED,0)
@@ -706,6 +750,10 @@ DBCC CHECKIDENT(JenisKain,RESEED,0)
 DBCC CHECKIDENT(Sampel,RESEED,0)
 DBCC CHECKIDENT(PurchaseOrder,RESEED,0)
 DBCC CHECKIDENT(SuratJalan,RESEED,0)
+GO
+
+exec resetDatabase
+
 
 
 

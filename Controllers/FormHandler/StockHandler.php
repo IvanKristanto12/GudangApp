@@ -26,7 +26,8 @@ if (isset($_GET['submitTambahStock'])) {
     self::$db->executeNonQuery("InsertNewSampel", ["'" . $inputSampelBaru . "'", $inputJenisKain, "'" . $inputWarna . "'"]);
     $_SESSION["done"] = true;
 } else if (isset($_GET['submitTambahWarna'])) {
-    $result = self::$db->executeQuery("InsertWarnaBaru", ["'" . $_GET['inputWarnaBaru'] . "'"]);
+    $nomorBaru = $_GET['inputNomorBaru'];
+    $result = self::$db->executeQuery("InsertWarnaBaru", ["'" . $_GET['inputWarnaBaru'] . "'", $nomorBaru]);
     if ($result[0][""] == 0) {
         $_SESSION["done"] = false;
     } else {
@@ -46,5 +47,8 @@ if (isset($_GET['submitTambahStock'])) {
     } else {
         $_SESSION["done"] = true;
     }
+} else if(isset($_GET['submitTambahJenisKain'])){
+    $jenisKain = $_GET['inputJenisKainBaru'];
+    
 }
 

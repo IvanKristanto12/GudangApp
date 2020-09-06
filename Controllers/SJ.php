@@ -72,6 +72,8 @@ class SJ extends Controller implements ViewInterface
             <form action="SJHandler" method="GET" class="w3-container">
                 <h4><b>Tanggal</b></h4>
                 <input type="date" class="w3-select w3-border" min="' . date("Y-m-d") . '" value="' . date("Y-m-d") . '" name="inputTanggalSJ" required/> 
+                <h4><b>Keterangan</b></h4>
+                <textarea class="w3-input w3-border" name="inputKeterangan"></textarea> 
                 <input class="w3-button w3-border w3-center w3-large w3-block w3-margin-top w3-green w3-text-black" value="submit" type="submit" name="submitCreateSJ" />
         </div>';
 

@@ -115,7 +115,7 @@ class SJPDF extends FPDF
         $this->Output();
     }
 
-    public function CreateCustomPDF($noPO, $noSJ, $tanggal, $namaPembeli, $alamatPembeli, $barang, $totalPcs, $totalMeter)
+    public function CreateCustomPDF($noPO, $noSJ, $tanggal, $namaPembeli, $alamatPembeli, $barang, $totalPcs, $totalMeter, $SJKet)
     {
         $this->noPO = $noPO;
         $this->noSJ = $noSJ;
@@ -160,6 +160,13 @@ class SJPDF extends FPDF
         $this->Cell(4, 0.6, $totalPcs, 1, 0, 'C');
         $this->Cell(4, 0.6, $totalMeter, 1, 1, 'C');
         $this->ln(0.3);
+        $this->Cell(0,0.6,'Keterangan :',0,1);
+        $this->SetFont('Arial', '', 10);
+        $ket = [];
+        $ket = explode("\n",$SJKet);
+        for($i = 0 ; $i < count($ket) ; $i++){
+            $this->Cell(0,0.6,$ket[$i],0,1,'L');
+        }
         $this->Output();
     }
 }
@@ -167,6 +174,7 @@ class SJPDF extends FPDF
 $pdf = new SJPDF();
 if (isset($_SESSION["SJPDF"])) {
     $result = $_SESSION["SJPDF"];
+    $keterangan = $_SESSION["SJKet"];
     $tanggal = $result[0]["Tanggal"];
     $noPO = substr(($result[0]["No_PO"] * 1 + 100000) . '', 1, 6) . '/PO/' . (substr($tanggal . '', 0, 4) * 1 - 2000) . "/" . substr($tanggal, 5, 2) . "/" . $result[0]["KodePenjual"];
     $noSJ = substr(($result[0]["No_PO"] * 1 + 100000) . '', 1, 6) . '/SJ/' . (substr($tanggal . '', 0, 4) * 1 - 2000) . "/" . substr($tanggal, 5, 2) . "/" . $result[0]["KodePenjual"];
@@ -204,7 +212,7 @@ if (isset($_SESSION["SJPDF"])) {
 
     $pdf = new SJPDF('L', 'cm', array(14, 21.6));
     $pdf->SetMargins(0.3, 0.3, 0.3);
-    $pdf->CreateCustomPDF($noPO, $noSJ, $tanggal, $namaPembeli, $alamatPembeli, $barang, $totalPcs, $totalMeter);
+    $pdf->CreateCustomPDF($noPO, $noSJ, $tanggal, $namaPembeli, $alamatPembeli, $barang, $totalPcs, $totalMeter,$keterangan);
 }
 
 session_unset();

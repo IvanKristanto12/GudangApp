@@ -75,15 +75,18 @@ CREATE TABLE PurchaseOrder
 	Id_Penjual INT NOT NULL FOREIGN KEY REFERENCES Penjual(Id_Penjual),
 	Id_Pembeli INT NOT NULL FOREIGN KEY REFERENCES Pembeli(Id_Pembeli),
 	Total_Pcs INT,
-	Total_Meter FLOAT
+	Total_Meter FLOAT,
+	Status INT
 )
 
 CREATE TABLE SuratJalan
 (
 	No_SJ INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
 	Tanggal DATE NOT NULL,
-	No_PO INT NOT NULL FOREIGN KEY REFERENCES PurchaseOrder(No_PO)
+	No_PO INT NOT NULL FOREIGN KEY REFERENCES PurchaseOrder(No_PO),
+	Keterangan VARCHAR(500)
 )
+
 
 /* table retur */
 CREATE TABLE ListKainPO
@@ -452,17 +455,17 @@ VALUES
 	(11, 1, 1)
 
 INSERT INTO PurchaseOrder
-	(Tanggal,Id_Penjual,Id_Pembeli,Total_Pcs,Total_Meter)
+	(Tanggal,Id_Penjual,Id_Pembeli,Total_Pcs,Total_Meter,Status)
 VALUES
-	('2020-07-30', 1, 2, 2, 250)
+	('2020-07-30', 1, 2, 2, 250,1)
 INSERT INTO PurchaseOrder
-	(Tanggal,Id_Penjual,Id_Pembeli,Total_Pcs,Total_Meter)
+	(Tanggal,Id_Penjual,Id_Pembeli,Total_Pcs,Total_Meter,Status)
 VALUES
-	('2020-07-30', 2, 1, 1, 100)
+	('2020-07-30', 2, 1, 1, 100,1)
 INSERT INTO PurchaseOrder
-	(Tanggal,Id_Penjual,Id_Pembeli,Total_Pcs,Total_Meter)
+	(Tanggal,Id_Penjual,Id_Pembeli,Total_Pcs,Total_Meter,Status)
 VALUES
-	('2020-07-31', 2, 3, 1, 150)
+	('2020-07-31', 2, 3, 1, 150,1)
 
 INSERT INTO ListKainPO
 	(No_PO, Id_Kain, StatusRetur)
@@ -482,12 +485,13 @@ VALUES
 	(3, 8, 1)
 
 INSERT INTO SuratJalan
-	(Tanggal,No_PO)
-VALUES('2020-07-30', 1)
+	(Tanggal,No_PO,Keterangan)
+VALUES('2020-07-30', 1,'')
 INSERT INTO SuratJalan
-	(Tanggal,No_PO)
-VALUES('2020-07-30', 2)
+	(Tanggal,No_PO,Keterangan)
+VALUES('2020-07-30', 2,'')
 INSERT INTO SuratJalan
-	(Tanggal,No_PO)
-VALUES('2020-07-31', 3)
+	(Tanggal,No_PO,Keterangan)
+VALUES('2020-07-31', 3,'')
+
 
