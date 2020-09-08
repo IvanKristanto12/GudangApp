@@ -97,11 +97,11 @@ class Stock extends Controller implements ViewInterface
                 if ($i != 0) {
                     echo '
                     <tr>
-                        <th class="column1"></th>
-                        <th class="w3-center w3-border columnWarna"></th>
-                        <th class="w3-center w3-border columnWarna"></th>
-                        <th class="w3-center w3-border column3"></th>
-                        <th class="w3-center w3-border column4"></th>
+                        <td class="column1"></td>
+                        <td class="w3-center w3-border columnWarna"></td>
+                        <td class="w3-center w3-border columnWarna"></td>
+                        <td class="w3-center w3-border column3"></td>
+                        <td class="w3-center w3-border column4"></td>
                         <th class="w3-center w3-border columnTotal">' . $sumPcs . '</th>
                         <th class="w3-center w3-border columnTotal">' . $sumMeter . '</th>
                     </tr>
@@ -118,10 +118,10 @@ class Stock extends Controller implements ViewInterface
                 </tr>
                 <tr>
                     <th class="column1"></th>
-                    <th class="w3-center w3-border columnWarna">' . $nomorWarna . '</th>
-                    <th class="w3-center w3-border columnWarna">' . $warna . '</th>
-                    <th class="w3-center w3-border column3">' . $totalPcs . '</th>
-                    <th class="w3-center w3-border column4">' . $totalMeter . '</th>
+                    <td class="w3-center w3-border columnWarna">' . $nomorWarna . '</td>
+                    <td class="w3-center w3-border columnWarna">' . $warna . '</td>
+                    <td class="w3-center w3-border column3">' . $totalPcs . '</td>
+                    <td class="w3-center w3-border column4">' . $totalMeter . '</td>
                     <th class="w3-center w3-border columnTotal"></th>
                     <th class="w3-center w3-border columnTotal"></th>
                 </tr>';
@@ -131,22 +131,22 @@ class Stock extends Controller implements ViewInterface
                 echo '
                 <tr>
                     <th></th>
-                    <th class="w3-center w3-border columnWarna">' . $nomorWarna . '</th>
-                    <th class="w3-center w3-border columnWarna">' . $warna . '</th>
-                    <th class="w3-center w3-border column3">' . $totalPcs . '</th>
-                    <th class="w3-center w3-border column4">' . $totalMeter . '</th>
-                    <th class="w3-center w3-border columnTotal"></th>
-                    <th class="w3-center w3-border columnTotal"></th>
+                    <td class="w3-center w3-border columnWarna">' . $nomorWarna . '</td>
+                    <td class="w3-center w3-border columnWarna">' . $warna . '</td>
+                    <td class="w3-center w3-border column3">' . $totalPcs . '</td>
+                    <td class="w3-center w3-border column4">' . $totalMeter . '</td>
+                    <td class="w3-center w3-border columnTotal"></th>
+                    <td class="w3-center w3-border columnTotal"></th>
                 </tr>';
             }
         }
         echo '
             <tr>
-                <th class="column1"></th>
-                <th class="w3-center w3-border columnWarna"></th>
-                <th class="w3-center w3-border columnWarna"></th>
-                <th class="w3-center w3-border column3"></th>
-                <th class="w3-center w3-border column4"></th>
+                <td class="column1"></td>
+                <td class="w3-center w3-border columnWarna"></td>
+                <td class="w3-center w3-border columnWarna"></td>
+                <td class="w3-center w3-border column3"></td>
+                <td class="w3-center w3-border column4"></td>
                 <th class="w3-center w3-border columnTotal">' . $sumPcs . '</th>
                 <th class="w3-center w3-border columnTotal">' . $sumMeter . '</th>
             </tr>

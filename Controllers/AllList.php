@@ -26,7 +26,7 @@ class AllList extends Controller implements ViewInterface
             <link rel="stylesheet" href="Assets/style/w3-theme-blue-grey.css">
             <link rel="icon" href="Assets/image/title-icon.png">
             <title>' . $title . '</title>
-            <script src="Assets/script/poHead.js"></script>
+            <script src="Assets/script/allListHead.js"></script>
             </head>';
     }
 
@@ -47,8 +47,25 @@ class AllList extends Controller implements ViewInterface
 
     private static function listPOSJ()
     {
+        session_start();
+        if (isset($_SESSION["sjDone"])) {
+            if ($_SESSION["sjDone"] == true) {
+                echo "<script>createSJPDF = true</script>";
+                echo '<div class="w3-text-black w3-green w3-center w3-border w3-large"><b> BUAT SJ DONE </b></div>';
+            }
+            unset($_SESSION["sjDone"]);
+        }
+
+        if (isset($_SESSION["poDone"])) {
+            if ($_SESSION["poDone"] == true) {
+                echo "<script>createPOPDF = true</script>";
+                echo '<div class="w3-text-black w3-green w3-center w3-border w3-large"><b> CETAK PO DONE </b></div>';
+            }
+            unset($_SESSION["poDone"]);
+        }
         echo '
-        <table class w3-table-all>
+        <form action="AllListHandler" method="GET">
+        <table class="w3-table-all">
             <tr class="w3-yellow">
                 <th class="w3-center">No</th>
                 <th class="w3-center">Kode PO</th>
@@ -71,31 +88,12 @@ class AllList extends Controller implements ViewInterface
             <td class="w3-center">'.$result[$i]["Tanggal PO"].'</td>
             <td class="w3-center">'.$noSJ.'</td>
             <td class="w3-center">'.$result[$i]["Tanggal SJ"].'</td>
-            <th class="w3-center"><button class="w3-button w3-green w3-text-black" name="Cetak" value=' . $result[$i]["No_PO"] . '>Cetak PO</button></th>
-            <th class="w3-center"><button class="w3-button w3-green w3-text-black" name="Cetak" value=' . $result[$i]["No_SJ"] . '>Cetak SJ</button></th>
+            <th class="w3-center"><button class="w3-button w3-green w3-text-black" name="CetakPO" value=' . $result[$i]["No_PO"] . '>Cetak PO</button></th>
+            <th class="w3-center"><button class="w3-button w3-green w3-text-black" name="CetakSJ" value=' . $result[$i]["No_SJ"] . '>Cetak SJ</button></th>
             </tr>';
         }
-
-
-
-        echo '</table>';
-
-        // //kiri
-        // echo '
-        //     <div class=" w3-half">
-        //     <h4 class="w3-center w3-border-bottom w3-padding"><b>Form PO</u></b></h4>
-        // </div>';
-
-        // //kanan
-        // echo '
-        //     <div class="w3-half rightSide">
-        //         <table class="w3-table-all">
-        //             <tr class="w3-yellow w3-border">
-        //                 <th class="w3-center">Tanggal</th>
-        //                 <th class="w3-center">Kode PO</th>
-        //                 <th class="w3-center">Cetak PO</th>
-        //             </tr>
-        //         </table>
-        //     </div>';
+        echo '</form></table>
+        <script src="Assets/script/allList.js"></script>
+        ';
     }
 }

@@ -95,8 +95,8 @@ class SJ extends Controller implements ViewInterface
             echo '
             <tr>
                 <th class="w3-center"><input class="w3-radio" value="' . $result[$i]["No_PO"] . '" type="radio" name="inputNoPO"/></th>
-                <th class="w3-center formText">' . $result[$i]["Tanggal"] . '</th>';
-
+                <th class="w3-center formText">' . $result[$i]["Tanggal"] . 
+            '</th>';
             $result1 = self::$db->executeQuery("GetDetailPO", [$result[$i]["No_PO"]]);
             $noPO = substr(($result1[0]["No_PO"] * 1 + 100000) . '', 1, 6) . '/PO/' . (substr($result1[0]["Tanggal"] . '', 0, 4) * 1 - 2000) . "/" . substr($result1[0]["Tanggal"], 5, 2) . "/" . $result1[0]["KodePenjual"];
             echo    '<th class="w3-center">' . $noPO . ' </th> 

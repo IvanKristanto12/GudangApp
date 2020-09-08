@@ -48,6 +48,11 @@ Route::set('SJHandler', function () {
     header("Location: sj");
 });
 
+Route::set('AllListHandler', function () {
+    Controller::SubmitForm("AllListHandler");
+    header("Location: alllist");
+});
+
 Route::set('POPDF', function () {
     Controller::SubmitForm("POPDF");
 });

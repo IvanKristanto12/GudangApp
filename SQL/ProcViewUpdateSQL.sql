@@ -402,7 +402,7 @@ END
 	ELSE
 	BEGIN
 	SELECT *
-	FROM ListPO
+	FROM ListPO 
 	WHERE No_PO = @inputNoPO
 	ORDER BY Sampel, Warna
 END
@@ -622,7 +622,22 @@ FROM PurchaseOrder
 GO
 
 exec GetListAll
+--------------------------------------------------------------------------------------------------
+/*Procedure No. 24*/
+--Get SJ Ket
+--@param 
+--@return 
+USE GordenDB
+GO
+CREATE OR ALTER PROC GetSJKet
+@inputNoPo INT
+AS
+SELECT Keterangan
+FROM SuratJalan 
+WHERE SuratJalan.No_PO = @inputNoPo
+GO
 
+exec GetSJKet 1
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 /*****List View*****/
