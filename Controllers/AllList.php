@@ -42,7 +42,11 @@ class AllList extends Controller implements ViewInterface
 
     public static function CreatePage()
     {
-        self::CreateHTML(self::CreateHead(), self::CreateBody());
+        if ($_COOKIE["userpermission"] == 0) {
+            self::CreateHTML(self::CreateHead(), self::CreateBody());
+        } else {
+            header("Location: stock");
+        }
     }
 
     private static function listPOSJ()
@@ -83,11 +87,11 @@ class AllList extends Controller implements ViewInterface
             $noSJ = substr(($result[$i]["No_PO"] * 1 + 100000) . '', 1, 6) . '/SJ/' . (substr($result[$i]["Tanggal PO"] . '', 0, 4) * 1 - 2000) . "/" . substr($result[$i]["Tanggal PO"], 5, 2) . "/" . $result[$i]["Kode"];
             echo '
             <tr>
-            <td class="w3-center">'.($i+1).'</td>
-            <td class="w3-center">'.$noPO.'</td>
-            <td class="w3-center">'.$result[$i]["Tanggal PO"].'</td>
-            <td class="w3-center">'.$noSJ.'</td>
-            <td class="w3-center">'.$result[$i]["Tanggal SJ"].'</td>
+            <td class="w3-center">' . ($i + 1) . '</td>
+            <td class="w3-center">' . $noPO . '</td>
+            <td class="w3-center">' . $result[$i]["Tanggal PO"] . '</td>
+            <td class="w3-center">' . $noSJ . '</td>
+            <td class="w3-center">' . $result[$i]["Tanggal SJ"] . '</td>
             <th class="w3-center"><button class="w3-button w3-green w3-text-black" name="CetakPO" value=' . $result[$i]["No_PO"] . '>Cetak PO</button></th>
             <th class="w3-center"><button class="w3-button w3-green w3-text-black" name="CetakSJ" value=' . $result[$i]["No_SJ"] . '>Cetak SJ</button></th>
             </tr>';

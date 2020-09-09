@@ -4,13 +4,19 @@ class Stock extends Controller implements ViewInterface
 {
     public static function CreateNavigationBar()
     {
-        echo '<div class="w3-bar w3-dark-gray">
+        if ($_COOKIE["userpermission"] == 0) {
+            echo '<div class="w3-bar w3-dark-gray">
         <a href="stock" class="w3-bar-item w3-button w3-gray">Stock</a>
         <a href="po" class="w3-bar-item w3-button">PO</a>
         <a href="sj" class="w3-bar-item w3-button">SJ</a>
         <a href="alllist" class="w3-bar-item w3-button ">AllList</a>
 
         </div>';
+        } else {
+            echo '<div class="w3-bar w3-dark-gray">
+        <a href="stock" class="w3-bar-item w3-button w3-gray">Stock</a>
+        </div>';
+        }
     }
 
     public static function CreateHead()
@@ -38,7 +44,9 @@ class Stock extends Controller implements ViewInterface
         self::CreateHeader();
         self::CreateNavigationBar();
         self::doneText();
-        self::modalTambah();
+        if ($_COOKIE["userpermission"] == 0) {
+            self::modalTambah();
+        }
         // self::listStock();
         self::listStockExcel();
         self::CreateFooter();
@@ -391,7 +399,7 @@ class Stock extends Controller implements ViewInterface
         echo '<table class="w3-table-all">
             <tr><th>No.</th> <th>Nama</th> <th>Nomor Warna</th></tr>';
         for ($i = 0; $i < count($result); $i++) {
-            echo '<tr><td>' . ($i + 1) . '</td> <td>' . $result[$i]["Nama"] . '</td> <td> '.$result[$i]["NomorWarna"].'</td></tr>';
+            echo '<tr><td>' . ($i + 1) . '</td> <td>' . $result[$i]["Nama"] . '</td> <td> ' . $result[$i]["NomorWarna"] . '</td></tr>';
         }
         echo '</table>';
 

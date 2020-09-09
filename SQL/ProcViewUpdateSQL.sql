@@ -639,6 +639,23 @@ GO
 
 exec GetSJKet 1
 --------------------------------------------------------------------------------------------------
+/*Procedure No. 25*/
+--Login Auth
+--@param 
+--@return 
+USE GordenDB
+GO
+CREATE OR ALTER PROC LoginAuth
+@inputUserName VARCHAR(50),
+@inputPassword VARCHAR(50)
+AS
+SELECT *
+FROM Users
+WHERE Nama = @inputUserName AND Users.[Password] = dbo.createPass(@inputPassword) 
+GO
+
+exec LoginAuth 'admin' , 'admin'
+--------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 /*****List View*****/
 SELECT

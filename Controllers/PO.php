@@ -33,12 +33,12 @@ class PO extends Controller implements ViewInterface
     }
 
     public static function CreateBody()
-    {   
+    {
         echo '<body>';
 
         session_start();
-        if(isset($_SESSION["po"])){
-            if($_SESSION["po"] == true){
+        if (isset($_SESSION["po"])) {
+            if ($_SESSION["po"] == true) {
                 echo "<script>createPDF = true</script>";
             }
         }
@@ -51,13 +51,17 @@ class PO extends Controller implements ViewInterface
 
     public static function CreatePage()
     {
-        self::CreateHTML(self::CreateHead(), self::CreateBody());
+        if ($_COOKIE["userpermission"] == 0) {
+            self::CreateHTML(self::CreateHead(), self::CreateBody());
+        } else {
+            header("Location: stock");
+        }
     }
 
     public static function FormPO()
     {
-        if(isset($_SESSION["po"])){
-            if($_SESSION["po"] == true){
+        if (isset($_SESSION["po"])) {
+            if ($_SESSION["po"] == true) {
                 echo '<div class="w3-text-black w3-green w3-center w3-border w3-large"><b> PO CREATED </b></div>';
             }
         }
@@ -74,7 +78,7 @@ class PO extends Controller implements ViewInterface
                 <option value="" disabled selected>Pilih Penjual</option>';
         $result = self::$db->executeQuery("GetListPenjual", [""]);
         for ($i = 0; $i < count($result); $i++) {
-            echo '<option value="' . $result[$i]["Id_Penjual"] . '">' . $result[$i]["Nama"] . ' - '. $result[$i]["Kode"] . '</option>';
+            echo '<option value="' . $result[$i]["Id_Penjual"] . '">' . $result[$i]["Nama"] . ' - ' . $result[$i]["Kode"] . '</option>';
         }
         echo '        
             </select> 
