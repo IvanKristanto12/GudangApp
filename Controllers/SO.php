@@ -1,14 +1,14 @@
 <?php
 
-class PO extends Controller implements ViewInterface
+class SO extends Controller implements ViewInterface
 {
 
     public static function CreateNavigationBar()
     {
         echo '<div class="w3-bar w3-dark-gray">
             <a href="stock" class="w3-bar-item w3-button">Stock</a>
-            <a href="so" class="w3-bar-item w3-button">SO</a>
-            <a href="po" class="w3-bar-item w3-button w3-gray">PO</a>
+            <a href="so" class="w3-bar-item w3-button w3-gray">SO</a>
+            <a href="po" class="w3-bar-item w3-button">PO</a>
             <a href="sj" class="w3-bar-item w3-button">SJ</a>
             <a href="alllist" class="w3-bar-item w3-button ">AllList</a>
 
@@ -17,7 +17,7 @@ class PO extends Controller implements ViewInterface
 
     public static function CreateHead()
     {
-        $title = "Purchase Order";
+        $title = "Surat Order";
 
         echo '<head>
             <meta charset="UTF-8">
@@ -37,15 +37,15 @@ class PO extends Controller implements ViewInterface
     {
         echo '<body>';
 
-        session_start();
-        if (isset($_SESSION["po"])) {
-            if ($_SESSION["po"] == true) {
-                echo "<script>createPDF = true</script>";
-            }
-        }
+        // session_start();
+        // if (isset($_SESSION["po"])) {
+        //     if ($_SESSION["po"] == true) {
+        //         echo "<script>createPDF = true</script>";
+        //     }
+        // }
         self::CreateHeader();
         self::CreateNavigationBar();
-        self::FormPO();
+        self::FormSO();
         self::CreateFooter();
         echo '</body>';
     }
@@ -59,21 +59,15 @@ class PO extends Controller implements ViewInterface
         }
     }
 
-    public static function FormPO()
+    public static function FormSO()
     {
-        if (isset($_SESSION["po"])) {
-            if ($_SESSION["po"] == true) {
-                echo '<div class="w3-text-black w3-green w3-center w3-border w3-large"><b> PO CREATED </b></div>';
-            }
-        }
-
         //kiri
         echo '
             <div class=" w3-half">
-            <h4 class="w3-center w3-border-bottom w3-padding"><b>Form PO</u></b></h4>
-            <form action="POHandler" method="GET" class="w3-container foS">
+            <h4 class="w3-center w3-border-bottom w3-padding"><b>Form SO</u></b></h4>
+            <form action="SOHandler" method="POST" class="w3-container">
                 <h4><b>Tanggal</b></h4>
-                <input type="date" class="w3-select w3-border" min="' . date("Y-m-d") . '" value="' . date("Y-m-d") . '" name="inputTanggalPO" required/> 
+                <input type="date" class="w3-select w3-border" min="' . date("Y-m-d") . '" value="' . date("Y-m-d") . '" name="inputTanggalSO" required/> 
                 <h4><b>Penjual</b></h4>
                 <select class="w3-select w3-border w3-padding-small" name="inputPenjual" required>
                 <option value="" disabled selected>Pilih Penjual</option>';
@@ -91,12 +85,10 @@ class PO extends Controller implements ViewInterface
             echo '<option value="' . $result[$i]["Id_Pembeli"] . '">' . $result[$i]["Nama"] . ' - ' . $result[$i]["Alamat"] . '</option>';
         }
         echo '</select>
-        <h4><b>Total Pcs</b></h4>
-        <input id="totalPcs" class="total" type="number" value="0" disabled/>
-        <h4><b>Total Meter</b></h4>
-        <input id="totalMeter" class="total" type="number" value="0" disabled/>
-        <input id="kain" type="hidden" name="kain"/>
-        <input class="w3-button w3-border w3-center w3-large w3-block w3-margin-top w3-green w3-text-black" value="submit" type="submit" name="submitCreatePO" />
+        <h4><b>Keterangan</b></h4>
+        <textarea class="w3-input w3-border" name="inputKeterangan"></textarea>
+        <input class="w3-button w3-border w3-center w3-large w3-block w3-margin-top w3-green w3-text-black" value="submit" type="submit" name="submitCreateSO" />
+ 
         </div>';
 
         //kanan
@@ -106,27 +98,38 @@ class PO extends Controller implements ViewInterface
                     <tr class="w3-yellow w3-border">
                         <th class="w3-center">Pilih</th>
                         <th class="w3-center">Sampel</th>
-                        <th class="w3-center">Warna</th>
-                        <th class="w3-center">Nomor Karung</th>
-                        <th class="w3-center">Meter</th>
-                        <th class="w3-center">Tanggal Masuk</th>
+                        <th class="w3-center">Warna - No Warna</th>
+                        <th class="w3-center">Total Pcs Stock</th>
                     </tr>';
 
-        $result = self::$db->executeQuery("GetListKain", ["1"]);
+        $result = self::$db->executeQuery("GetStock", [""]);
         for ($i = 0; $i < count($result); $i++) {
-            echo '
+            if ($result[$i]["TotalPcs"] != null) {
+                echo '
             <tr>
-                <td class="w3-center"><input class="checkSize" value="' . $result[$i]["Id_Kain"] . '" type="checkbox" onchange="setTotal()"/></td>
-                <td class="w3-center">' . $result[$i]["Sampel"] . '</td>
-                <td class="w3-center">' . $result[$i]["Warna"] . '</td>
-                <td class="w3-center">' . $result[$i]["NomorKarung"] . '</td>
-                <td id="meter" class="w3-center">' . $result[$i]["Meter"] . '</td>
-                <td class="w3-center">' . $result[$i]["TanggalMasuk"] . '</td>
+                <td class="w3-center"><input name="sampelchecked[]" class="checkSize" value="' . $result[$i]["Id_Sampel"] . '" type="checkbox" onclick="showFunction('. "'D".$i."'".')"/></td>
+                <input type="hidden" name="warna'.$result[$i]["Id_Sampel"].'" value="'.$result[$i]["Id_Warna"].'"/>
+                <td class="w3-center">' . $result[$i]["Sampel"] . '</td>';
+            if($result[$i]["NomorWarna"] == null){
+                echo '<td class="w3-center">' . $result[$i]["Warna"] . '</td>';
+            }else{
+                echo '<td class="w3-center">' . $result[$i]["Warna"] . '-'.$result[$i]["NomorWarna"].'</td>';
+
+            }
+            echo '<td class="w3-center">' . $result[$i]["TotalPcs"] . ' </td>
+            </tr>
+            <tr style="display:none"></tr>
+            <tr>
+                <td colspan="4" style="padding:0px">
+                    <p id="D'.$i.'" style="display:none; text-align:center;">Input Pcs : <input style="display:inline; width:50%" class="w3-input w3-border" type="number" min="1" max='.'"'.$result[$i]["TotalPcs"].'"'.' value="1" name="inputPcs'.$result[$i]["Id_Sampel"].$result[$i]["Id_Warna"].'"/></p>
+                </td>
             </tr>';
+            }
         }
         echo '
+            </table>
             </div>
-            </form>
-        <script src="Assets/script/po.js"></script>';
+        </form>
+        <script src="Assets/script/so.js"> </script>';
     }
 }

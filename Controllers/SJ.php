@@ -7,6 +7,7 @@ class SJ extends Controller implements ViewInterface
     {
         echo '<div class="w3-bar w3-dark-gray">
             <a href="stock" class="w3-bar-item w3-button">Stock</a>
+            <a href="so" class="w3-bar-item w3-button">SO</a>
             <a href="po" class="w3-bar-item w3-button">PO</a>
             <a href="sj" class="w3-bar-item w3-button w3-gray">SJ</a>
             <a href="alllist" class="w3-bar-item w3-button ">AllList</a>
@@ -98,13 +99,13 @@ class SJ extends Controller implements ViewInterface
         for ($i = 0; $i < count($result); $i++) {
             echo '
             <tr>
-                <th class="w3-center"><input class="w3-radio" value="' . $result[$i]["No_PO"] . '" type="radio" name="inputNoPO"/></th>
-                <th class="w3-center formText">' . $result[$i]["Tanggal"] .
-                '</th>';
+                <td class="w3-center"><input class="w3-radio" value="' . $result[$i]["No_PO"] . '" type="radio" name="inputNoPO"/></td>
+                <td class="w3-center formText">' . $result[$i]["Tanggal"] .'</td>';
             $result1 = self::$db->executeQuery("GetDetailPO", [$result[$i]["No_PO"]]);
             $noPO = substr(($result1[0]["No_PO"] * 1 + 100000) . '', 1, 6) . '/PO/' . (substr($result1[0]["Tanggal"] . '', 0, 4) * 1 - 2000) . "/" . substr($result1[0]["Tanggal"], 5, 2) . "/" . $result1[0]["KodePenjual"];
-            echo    '<th class="w3-center">' . $noPO . ' </th> 
-                <th class="w3-center"><button class="w3-button w3-green w3-text-black" name="Cetak" value=' . $result[$i]["No_PO"] . '>Cetak</button></th>
+            echo '
+            <td class="w3-center">' . $noPO . ' </td> 
+                <td class="w3-center"><button class="w3-button w3-green w3-text-black" name="Cetak" value=' . $result[$i]["No_PO"] . '>Cetak</button></td>
             </tr>';
         }
         echo '

@@ -184,7 +184,7 @@ SET @totalMeter = 0
 INSERT INTO PurchaseOrder
 	(Tanggal,Id_Penjual,Id_Pembeli,Total_Pcs,Total_Meter,Status)
 VALUES
-	(@inputTanggal, @inputPenjual, @inputPembeli, @totalPcs, @totalMeter,0)
+	(@inputTanggal, @inputPenjual, @inputPembeli, @totalPcs, @totalMeter, 0)
 
 SET @noPO = (SELECT MAX(No_PO)
 FROM PurchaseOrder)
@@ -279,7 +279,7 @@ IF @inputIdSampel = 0
 END
 	ELSE
 	BEGIN
-	SELECT Id_Warna , Warna
+	SELECT Id_Warna , Warna ,NomorWarna
 	FROM ListIdSampelIdWarna
 	WHERE Id_Sampel = @inputIdSampel
 	ORDER BY Warna
@@ -402,7 +402,7 @@ END
 	ELSE
 	BEGIN
 	SELECT *
-	FROM ListPO 
+	FROM ListPO
 	WHERE No_PO = @inputNoPO
 	ORDER BY Sampel, Warna
 END
@@ -453,20 +453,21 @@ exec CreateSJ '2020-08-30',1,''
 USE GordenDB
 GO
 CREATE OR ALTER PROC InsertWarnaBaru
-	@inputNama VARCHAR(50), @inputNomorBaru INT
+	@inputNama VARCHAR(50),
+	@inputNomorBaru INT
 AS
 DECLARE @i VARCHAR(50)
 IF @inputNomorBaru = 0
 BEGIN
-SET @i = (SELECT DISTINCT Nama
-FROM Warna
-WHERE Nama LIKE UPPER(@inputNama))
+	SET @i = (SELECT DISTINCT Nama
+	FROM Warna
+	WHERE Nama LIKE UPPER(@inputNama))
 END
 ELSE 
 BEGIN
-SET @i = (SELECT Id_Warna
-FROM Warna
-WHERE Nama LIKE UPPER(@inputNama) AND NomorWarna = @inputNomorBaru)
+	SET @i = (SELECT Id_Warna
+	FROM Warna
+	WHERE Nama LIKE UPPER(@inputNama) AND NomorWarna = @inputNomorBaru)
 END
 IF @i IS NULL
 	BEGIN
@@ -569,9 +570,9 @@ WHERE Status = 1
 GROUP BY Sampel.Nama, Warna.Nama , Warna.NomorWarna
 ORDER BY Sampel.Nama, Warna.Nama , Warna.NomorWarna
 
-SELECT ListSampelWarna.Sampel, ListSampelWarna.Warna, a.NomorWarna, a.TotalPcs, a.TotalMeter
+SELECT ListSampelWarna.Id_Sampel, ListSampelWarna.Sampel, ListSampelWarna.Id_Warna, ListSampelWarna.Warna, a.NomorWarna, a.TotalPcs, a.TotalMeter
 FROM @a as a
-RIGHT OUTER JOIN ListSampelWarna ON ListSampelWarna.Sampel = a.Sampel AND ListSampelWarna.Warna = a.Warna
+	RIGHT OUTER JOIN ListSampelWarna ON ListSampelWarna.Sampel = a.Sampel AND ListSampelWarna.Warna = a.Warna
 ORDER BY ListSampelWarna.Sampel , ListSampelWarna.Warna
 GO
 
@@ -604,7 +605,7 @@ END
 END
 GO
 
-exec InsertJenisKainBaru 'Vitrase' 
+exec InsertJenisKainBaru 'Vitrase'
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 23*/
 --Get List All
@@ -616,7 +617,7 @@ CREATE OR ALTER PROC GetListAll
 AS
 
 SELECT PurchaseOrder.No_PO, PurchaseOrder.Tanggal as 'Tanggal PO', No_SJ, SuratJalan.Tanggal as 'Tanggal SJ', Kode
-FROM PurchaseOrder 
+FROM PurchaseOrder
 	JOIN SuratJalan on SuratJalan.No_PO = PurchaseOrder.No_PO
 	JOIN Penjual on Penjual.Id_Penjual = PurchaseOrder.Id_Penjual
 GO
@@ -630,10 +631,10 @@ exec GetListAll
 USE GordenDB
 GO
 CREATE OR ALTER PROC GetSJKet
-@inputNoPo INT
+	@inputNoPo INT
 AS
 SELECT Keterangan
-FROM SuratJalan 
+FROM SuratJalan
 WHERE SuratJalan.No_PO = @inputNoPo
 GO
 
@@ -646,8 +647,8 @@ exec GetSJKet 1
 USE GordenDB
 GO
 CREATE OR ALTER PROC LoginAuth
-@inputUserName VARCHAR(50),
-@inputPassword VARCHAR(50)
+	@inputUserName VARCHAR(50),
+	@inputPassword VARCHAR(50)
 AS
 SELECT *
 FROM Users
@@ -655,6 +656,40 @@ WHERE Nama = @inputUserName AND Users.[Password] = dbo.createPass(@inputPassword
 GO
 
 exec LoginAuth 'admin' , 'admin'
+--------------------------------------------------------------------------------------------------
+/*Procedure No. 26*/
+--Insert SO
+--@param 
+--@return 
+USE GordenDB
+GO
+CREATE OR ALTER PROC CreateSO
+	@inputTanggal DATE,
+	@inputPenjual INTEGER,
+	@inputPembeli INTEGER,
+	@inputKeterangan VARCHAR(500)
+AS
+INSERT INTO SuratOrder (Tanggal,Id_Penjual,Id_Pembeli,Keterangan,[Status]) VALUES (@inputTanggal,@inputPenjual,@inputPembeli,@inputKeterangan,0)
+SELECT Max(No_SO) as 'No_SO' FROM SuratOrder
+GO
+
+--exec CreateSO 
+--------------------------------------------------------------------------------------------------
+/*Procedure No. 27*/
+--Insert ListSampelSO
+--@param 
+--@return 
+USE GordenDB
+GO
+CREATE OR ALTER PROC InsertListSampelSO
+	@inputNoSO INTEGER,
+	@inputSampel INTEGER,
+	@inputWarna INTEGER,
+	@inputTotalPcs INTEGER
+AS
+INSERT INTO ListSampelSO (No_SO,Id_Sampel,Id_Warna,[Total_Pcs]) VALUES (@inputNoSO,@inputSampel,@inputWarna,@inputTotalPcs)
+GO
+
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 /*****List View*****/
@@ -721,7 +756,7 @@ USE GordenDB
 GO
 CREATE OR ALTER VIEW ListSampelWarna
 AS
-	SELECT Sampel.Nama as 'Sampel', Warna.Nama as 'Warna', Warna.NomorWarna as 'NomorWarna'
+	SELECT Sampel.Id_Sampel, Sampel.Nama as 'Sampel', Warna.Id_Warna, Warna.Nama as 'Warna', Warna.NomorWarna as 'NomorWarna'
 	FROM SampelWarna
 		JOIN Sampel ON Sampel.Id_Sampel = SampelWarna.Id_Sampel
 		JOIN Warna ON Warna.Id_Warna = SampelWarna.Id_Warna
@@ -736,7 +771,7 @@ USE GordenDB
 GO
 CREATE OR ALTER VIEW ListIdSampelIdWarna
 AS
-	SELECT Sampel.Id_Sampel, Sampel.Nama as 'Sampel', Warna.Id_Warna, Warna.Nama as 'Warna'
+	SELECT Sampel.Id_Sampel, Sampel.Nama as 'Sampel', Warna.Id_Warna, Warna.Nama as 'Warna', Warna.NomorWarna as 'NomorWarna'
 	FROM SampelWarna
 		JOIN Sampel ON Sampel.Id_Sampel = SampelWarna.Id_Sampel
 		JOIN Warna ON Warna.Id_Warna = SampelWarna.Id_Warna
@@ -770,6 +805,10 @@ SELECT *
 FROM ListKainPO
 SELECT *
 FROM SuratJalan
+SELECT *
+FROM SuratOrder
+SELECT *
+FROM ListSampelSO
 
 USE GordenDB
 GO
@@ -780,7 +819,9 @@ DELETE FROM ListKainPO
 DELETE FROM SampelWarna
 DELETE FROM KainSampelWarna
 DELETE FROM SuratJalan
+DELETE FROM ListSampelSO
 DELETE FROM PurchaseOrder
+DELETE FROM SuratOrder
 DELETE FROM Users
 DELETE FROM Kain
 DELETE FROM Warna
@@ -797,6 +838,7 @@ DBCC CHECKIDENT(Pembeli,RESEED,0)
 DBCC CHECKIDENT(Penjual,RESEED,0)
 DBCC CHECKIDENT(JenisKain,RESEED,0)
 DBCC CHECKIDENT(Sampel,RESEED,0)
+DBCC CHECKIDENT(SuratOrder,RESEED,0)
 DBCC CHECKIDENT(PurchaseOrder,RESEED,0)
 DBCC CHECKIDENT(SuratJalan,RESEED,0)
 GO

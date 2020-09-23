@@ -9,7 +9,11 @@ class AJAX extends Controller
         $inputId = $_REQUEST["inputId"];
         $result = self::$db->executeQuery("GetIdSampelIdWarna", [$inputId]);
         for ($i = 0; $i < count($result); $i++) {
-            $respondText .= '"<option value="'.$result[$i]["Id_Warna"].'">'.$result[$i]["Warna"].'</option> "';
+            if($result[$i]["NomorWarna"]!= null){
+                $respondText .= '"<option value="'.$result[$i]["Id_Warna"].'">'.$result[$i]["Warna"]. '-'.$result[$i]["NomorWarna"].'</option> "';
+            }else{
+                $respondText .= '"<option value="'.$result[$i]["Id_Warna"].'">'.$result[$i]["Warna"].'</option> "';
+            }
         }
         echo $respondText;
     }

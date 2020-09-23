@@ -1,0 +1,2 @@
+<?php
+SO::CreatePage();

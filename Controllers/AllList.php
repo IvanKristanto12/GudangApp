@@ -6,6 +6,7 @@ class AllList extends Controller implements ViewInterface
     {
         echo '<div class="w3-bar w3-dark-gray">
             <a href="stock" class="w3-bar-item w3-button">Stock</a>
+            <a href="so" class="w3-bar-item w3-button">SO</a>
             <a href="po" class="w3-bar-item w3-button">PO</a>
             <a href="sj" class="w3-bar-item w3-button">SJ</a>
             <a href="alllist" class="w3-bar-item w3-button w3-gray">AllList</a>

@@ -11,7 +11,6 @@ if(isset($_POST["login"])){
         setcookie("username",$result[0]["Nama"],time()+86400,"/");
         setcookie("userpermission",$result[0]["Permission"],time()+86400,"/");
         header("Location: stock");
-
     }
 } else if(isset($_POST["logout"])){
     setcookie("username","",time()-3600);

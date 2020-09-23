@@ -7,6 +7,7 @@ class Stock extends Controller implements ViewInterface
         if ($_COOKIE["userpermission"] == 0) {
             echo '<div class="w3-bar w3-dark-gray">
         <a href="stock" class="w3-bar-item w3-button w3-gray">Stock</a>
+        <a href="so" class="w3-bar-item w3-button">SO</a>
         <a href="po" class="w3-bar-item w3-button">PO</a>
         <a href="sj" class="w3-bar-item w3-button">SJ</a>
         <a href="alllist" class="w3-bar-item w3-button ">AllList</a>
@@ -376,16 +377,30 @@ class Stock extends Controller implements ViewInterface
             $JenisKainOption .= '"<option value="' . $result[$i]["Id_JenisKain"] . '">' . $result[$i]["Nama"] . '</option>"';
         }
         echo $JenisKainOption . '</select>';
-
-        echo '<h4><b>Warna</b></h4> ';
+        
+        echo '
+        <h4><b>Pilih Warna</b></h4>
+        <table class="w3-table-all"> 
+        <tr>
+            <th>Pilih</th>
+            <th>Warna</th>
+            <th>Nomor Warna</th>
+        </tr>';
         $checkboxWarna = '';
         $result = self::$db->executeQuery("GetListWarna", [""]);
 
         for ($i = 0; $i < count($result); $i++) {
-            $checkboxWarna .= '<input class="w3-check w3-border" type="checkbox" name="warna[' . $i . ']" value="' . $result[$i]["Id_Warna"] . '" /> <label>' . $result[$i]["Nama"] . '</label> <br>';
+            $checkboxWarna .= '
+            <tr>
+                <td><input class="w3-check w3-border" type="checkbox" name="warna[' . $i . ']" value="' . $result[$i]["Id_Warna"] . '" /></td>
+                <td><label>' . $result[$i]["Nama"] . '</label></td>
+                <td>'.$result[$i]["NomorWarna"].'</td>
+            </tr>';
         }
         echo $checkboxWarna;
-        echo '<input class="w3-button w3-border w3-center w3-large w3-block w3-margin-top w3-green w3-text-black" value="submit" type="submit" name="submitTambahSampel" />
+        echo '
+        </table>
+        <input class="w3-button w3-border w3-center w3-large w3-block w3-margin-top w3-green w3-text-black" value="submit" type="submit" name="submitTambahSampel" />
         </form>
        </div>';
     }

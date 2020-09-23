@@ -23,6 +23,10 @@ Route::set('stock', function () {
 
 if (isset($_COOKIE["userpermission"])) {
     if ($_COOKIE["userpermission"] == 0) {
+        Route::set('so', function () {
+            PO::CreateView('SO');
+        });
+
         Route::set('po', function () {
             PO::CreateView('PO');
         });
@@ -44,6 +48,11 @@ if (isset($_COOKIE["userpermission"])) {
         Route::set('StockFormHandler', function () {
             Controller::SubmitForm("StockHandler");
             header("Location: stock");
+        });
+
+        Route::set('SOHandler', function () {
+            Controller::SubmitForm("SOHandler");
+            header("Location: so");
         });
 
         Route::set('POHandler', function () {
