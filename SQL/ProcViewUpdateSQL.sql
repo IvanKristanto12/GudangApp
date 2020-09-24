@@ -279,7 +279,7 @@ IF @inputIdSampel = 0
 END
 	ELSE
 	BEGIN
-	SELECT Id_Warna , Warna ,NomorWarna
+	SELECT Id_Warna , Warna , NomorWarna
 	FROM ListIdSampelIdWarna
 	WHERE Id_Sampel = @inputIdSampel
 	ORDER BY Warna
@@ -669,8 +669,12 @@ CREATE OR ALTER PROC CreateSO
 	@inputPembeli INTEGER,
 	@inputKeterangan VARCHAR(500)
 AS
-INSERT INTO SuratOrder (Tanggal,Id_Penjual,Id_Pembeli,Keterangan,[Status]) VALUES (@inputTanggal,@inputPenjual,@inputPembeli,@inputKeterangan,0)
-SELECT Max(No_SO) as 'No_SO' FROM SuratOrder
+INSERT INTO SuratOrder
+	(Tanggal,Id_Penjual,Id_Pembeli,Keterangan,[Status])
+VALUES
+	(@inputTanggal, @inputPenjual, @inputPembeli, @inputKeterangan, 0)
+SELECT Max(No_SO) as 'No_SO'
+FROM SuratOrder
 GO
 
 --exec CreateSO 
@@ -687,8 +691,32 @@ CREATE OR ALTER PROC InsertListSampelSO
 	@inputWarna INTEGER,
 	@inputTotalPcs INTEGER
 AS
-INSERT INTO ListSampelSO (No_SO,Id_Sampel,Id_Warna,[Total_Pcs]) VALUES (@inputNoSO,@inputSampel,@inputWarna,@inputTotalPcs)
+INSERT INTO ListSampelSO
+	(No_SO,Id_Sampel,Id_Warna,[Total_Pcs])
+VALUES
+	(@inputNoSO, @inputSampel, @inputWarna, @inputTotalPcs)
 GO
+--------------------------------------------------------------------------------------------------
+/*Procedure No. 28*/
+--Insert GetDetailSO
+--@param No_SO
+--@return 
+USE GordenDB
+GO
+CREATE OR ALTER PROC GetDetailSO
+	@inputNoSO INTEGER
+AS
+SELECT DISTINCT SuratOrder.No_SO , Tanggal, SuratOrder.Id_Penjual, SuratOrder.Id_Pembeli, SuratOrder.Keterangan, [Status], ListSampelSO.Id_Sampel, ListSampelSO.Id_Warna, ListSampelSO.Total_Pcs, Penjual.Nama as 'Penjual', Penjual.Kode as 'KodePenjual', Pembeli.Nama as 'Pembeli' , Pembeli.Alamat as 'AlamatPembeli', Sampel.Id_Sampel, Sampel.Nama as 'Sampel', Warna.Id_Warna , Warna.Nama as 'Warna', NomorWarna, Total_Pcs
+FROM SuratOrder
+	JOIN ListSampelSO ON SuratOrder.No_SO = ListSampelSO.No_SO
+	JOIN Penjual ON Penjual.Id_Penjual = SuratOrder.Id_Penjual
+	JOIN Pembeli ON Pembeli.Id_Pembeli = SuratOrder.Id_Pembeli
+	JOIN Sampel ON Sampel.Id_Sampel = ListSampelSO.Id_Sampel
+	JOIN Warna ON Warna.Id_Warna = ListSampelSO.Id_Warna
+WHERE SuratOrder.No_SO = @inputNoSO
+GO
+
+exec GetDetailSO 1
 
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------

@@ -13,4 +13,5 @@ if (isset($_POST["submitCreateSO"])) {
     foreach ($_POST['sampelchecked'] as $check) {
         self::$db->executeNonQuery("InsertListSampelSO", [$noSO, $check, $_POST["warna" . $check], $_POST["inputPcs" . $check . $_POST["warna" . $check]]]);
     }
+    
 }
