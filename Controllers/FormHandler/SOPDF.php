@@ -4,25 +4,24 @@ session_start();
 
 class SOPDF extends FPDF
 {
-    private $noPO = '';
-    private $noSJ = '';
+    private $noSO = '';
     // Page header
     function Header()
     {
         if ($this->CurOrientation != 'L') {
             $this->SetFont('Arial', 'B', 20);
-            $this->Cell(54, 10, 'Surat Jalan', 0, 0, 'C');
+            $this->Cell(54, 10, 'Surat Order', 0, 0, 'C');
             $this->Cell(56);
             $this->SetFont('Arial', 'B', 15);
-            $this->Cell(80, 10, $this->noSJ, 1, 0, 'C');
+            $this->Cell(80, 10, "SO/" . $this->noSO, 1, 0, 'C');
             // Line break
             $this->Ln(15);
         } else {
             $this->SetFont('Arial', 'B', 15);
-            $this->Cell(5, 0.6, 'Surat Jalan', 0, 0, 'L');
+            $this->Cell(5, 0.6, 'Surat Order', 0, 0, 'L');
             $this->Cell(10);
             $this->SetFont('Arial', 'B', 15);
-            $this->Cell(6, 0.6, $this->noSJ, 1, 0, 'C');
+            $this->Cell(6, 0.6, "SO/" . $this->noSO, 1, 0, 'C');
             $this->Ln(0.8);
         }
     }
@@ -38,18 +37,19 @@ class SOPDF extends FPDF
             // Page number
             $this->Cell(0, 10, 'Page ' . $this->PageNo() . '/{nb}', 0, 0, 'C');
         } else {
-            $this->SetY(-2.5);
-            $this->SetFont('Arial', '', 10);
-            $this->Cell(7, 0.6, 'Pembuat', 0, 0, 'C');
-            $this->Cell(7, 0.6, 'Disetujui', 0, 0, 'C');
-            $this->Cell(7, 0.6, 'Pembeli', 0, 1, 'C');
-            $this->Ln(1);
-            $this->Cell(2);
-            $this->Cell(3, 0.5, '(                              )', 0, 0, 'C');
-            $this->Cell(4);
-            $this->Cell(3, 0.5, '(                              )', 0, 0, 'C');
-            $this->Cell(4);
-            $this->Cell(3, 0.5, '(                              )', 0, 1, 'C');
+            $this->SetY(-1);
+            // $this->SetY(-2.5);
+            //     $this->SetFont('Arial', '', 10);
+            //     $this->Cell(7, 0.6, 'Pembuat', 0, 0, 'C');
+            //     $this->Cell(7, 0.6, 'Disetujui', 0, 0, 'C');
+            //     $this->Cell(7, 0.6, 'Pembeli', 0, 1, 'C');
+            //     $this->Ln(1);
+            //     $this->Cell(2);
+            //     $this->Cell(3, 0.5, '(                              )', 0, 0, 'C');
+            //     $this->Cell(4);
+            //     $this->Cell(3, 0.5, '(                              )', 0, 0, 'C');
+            //     $this->Cell(4);
+            //     $this->Cell(3, 0.5, '(                              )', 0, 1, 'C');
             $this->SetFont('Arial', 'I', 8);
             $this->Cell(0, 0.3, 'Page ' . $this->PageNo() . '/{nb}', 0, 0, 'C');
         }
@@ -62,7 +62,7 @@ class SOPDF extends FPDF
         $this->AliasNbPages();
         $this->AddPage();
         $this->SetFont('Arial', 'B', 12);
-        $this->Cell(20, 6, 'Kode PO', 0, 0, '');
+        $this->Cell(20, 6, 'No PO', 0, 0, '');
         $this->Cell(3, 6, ':', 0, 0);
         $this->SetFont('Arial', '', 12);
         $this->Cell(75, 6, $this->noPO, 0, 0);
@@ -115,22 +115,23 @@ class SOPDF extends FPDF
         $this->Output();
     }
 
-    public function CreateCustomPDF($noSO, $tanggal, $namaPenjual, $namaPembeli, $alamatPembeli, $barang, $keterangan)
+    public function CreateCustomPDF($noSO, $tanggal, $namaPenjual, $kodePenjual, $namaPembeli, $alamatPembeli, $barang, $keterangan)
     {
+        $this->noSO = $noSO;
         $this->AliasNbPages();
         $this->AddPage();
         $this->SetFont('Arial', 'B', 12);
-        $this->Cell(2, 0.6, 'Kode PO', 0, 0, '');
+        $this->Cell(2, 0.6, "Penjual", 0, 0, '');
         $this->Cell(0.5, 0.6, ':', 0, 0);
         $this->SetFont('Arial', '', 12);
-        $this->Cell(13, 0.6, $this->noPO, 0, 0);
+        $this->Cell(13, 0.6, $namaPenjual . " / " . $kodePenjual, 0, 0);
         $this->Cell(1.18);
         $this->SetFont('Arial', 'B', 12);
         $tanggal = date_create($tanggal);
         $this->Cell(1.5, 0.6, 'Tanggal : ' . date_format($tanggal, "d/m/Y"), 0, 1);
 
         $this->SetFont('Arial', 'B', 12);
-        $this->Cell(2, 0.6, 'Nama', 0, 0, '');
+        $this->Cell(2, 0.6, 'Pembeli', 0, 0, '');
         $this->Cell(0.5, 0.6, ':', 0, 0);
         $this->SetFont('Arial', '', 12);
         $this->Cell(13, 0.6, $namaPembeli, 0, 1);
@@ -142,15 +143,15 @@ class SOPDF extends FPDF
         $this->Ln(0.4);
         $this->SetFont('Arial', 'B', 11);
         $this->Cell(1, 0.6, 'No.', 1, 0, 'C');
-        $this->Cell(12, 0.6, 'Nama Barang', 1, 0, 'C');
-        $this->Cell(4, 0.6, 'Pcs', 1, 0, 'C');
-        $this->Cell(4, 0.6, 'Meter', 1, 1, 'C');
+        $this->Cell(10, 0.6, 'Deskripsi', 1, 0, 'C');
+        $this->Cell(6, 0.6, 'Warna', 1, 0, 'C');
+        $this->Cell(4, 0.6, 'Jumlah', 1, 1, 'C');
         $this->SetFont('Arial', '', 10);
 
         for ($i = 0; $i < count($barang); $i++) {
             $this->Cell(1, 0.6, $i + 1, 1, 0, 'C');
-            $this->Cell(12, 0.6, $barang[$i]["Sampel"], 1, 0, 'C');
-            $this->Cell(4, 0.6, $barang[$i]["Warna"], 1, 0, 'C');
+            $this->Cell(10, 0.6, $barang[$i]["Sampel"], 1, 0, 'C');
+            $this->Cell(6, 0.6, $barang[$i]["Warna"], 1, 0, 'C');
             $this->Cell(4, 0.6, $barang[$i]["Total_Pcs"], 1, 1, 'C');
         }
         $this->ln(0.3);
@@ -166,8 +167,8 @@ class SOPDF extends FPDF
 }
 
 $pdf = new SOPDF();
-Controller::initializeDB();
-$_SESSION["SOPDF"] = Controller::$db->executeQuery("GetDetailSO", [1]);
+// Controller::initializeDB();
+// $_SESSION["SOPDF"] = Controller::$db->executeQuery("GetDetailSO", [1]);
 
 if (isset($_SESSION["SOPDF"])) {
     $result = $_SESSION["SOPDF"];
@@ -192,7 +193,7 @@ if (isset($_SESSION["SOPDF"])) {
 
     $pdf = new SOPDF('L', 'cm', array(14, 21.6));
     $pdf->SetMargins(0.3, 0.3, 0.3);
-    $pdf->CreateCustomPDF($noSO,$tanggal,$namaPenjual,$namaPembeli,$alamatPembeli,$barang,$keterangan);
+    $pdf->CreateCustomPDF($noSO, $tanggal, $namaPenjual, $kodePenjual, $namaPembeli, $alamatPembeli, $barang, $keterangan);
 }
 
 session_unset();

@@ -29,7 +29,7 @@ class SO extends Controller implements ViewInterface
             <link rel="stylesheet" href="Assets/style/w3-theme-blue-grey.css">
             <link rel="icon" href="Assets/image/title-icon.png">
             <title>' . $title . '</title>
-            <script src="Assets/script/poHead.js"></script>
+            <script src="Assets/script/soHead.js"></script>
             </head>';
     }
 
@@ -37,12 +37,10 @@ class SO extends Controller implements ViewInterface
     {
         echo '<body>';
 
-        // session_start();
-        // if (isset($_SESSION["po"])) {
-        //     if ($_SESSION["po"] == true) {
-        //         echo "<script>createPDF = true</script>";
-        //     }
-        // }
+        session_start();
+        if (isset($_SESSION["SOPDF"])) {
+            echo "<script>createSOPDF = true</script>";
+        }
         self::CreateHeader();
         self::CreateNavigationBar();
         self::FormSO();
@@ -107,21 +105,20 @@ class SO extends Controller implements ViewInterface
             if ($result[$i]["TotalPcs"] != null) {
                 echo '
             <tr>
-                <td class="w3-center"><input name="sampelchecked[]" class="checkSize" value="' . $result[$i]["Id_Sampel"] . '" type="checkbox" onclick="showFunction('. "'D".$i."'".')"/></td>
-                <input type="hidden" name="warna'.$result[$i]["Id_Sampel"].'" value="'.$result[$i]["Id_Warna"].'"/>
+                <td class="w3-center"><input name="sampelchecked[]" class="checkSize" value="' . $result[$i]["Id_Sampel"] . '" type="checkbox" onclick="showFunction(' . "'D" . $i . "'" . ')"/></td>
+                <input type="hidden" name="warna' . $result[$i]["Id_Sampel"] . '" value="' . $result[$i]["Id_Warna"] . '"/>
                 <td class="w3-center">' . $result[$i]["Sampel"] . '</td>';
-            if($result[$i]["NomorWarna"] == null){
-                echo '<td class="w3-center">' . $result[$i]["Warna"] . '</td>';
-            }else{
-                echo '<td class="w3-center">' . $result[$i]["Warna"] . '-'.$result[$i]["NomorWarna"].'</td>';
-
-            }
-            echo '<td class="w3-center">' . $result[$i]["TotalPcs"] . ' </td>
+                if ($result[$i]["NomorWarna"] == null) {
+                    echo '<td class="w3-center">' . $result[$i]["Warna"] . '</td>';
+                } else {
+                    echo '<td class="w3-center">' . $result[$i]["Warna"] . '-' . $result[$i]["NomorWarna"] . '</td>';
+                }
+                echo '<td class="w3-center">' . $result[$i]["TotalPcs"] . ' </td>
             </tr>
             <tr style="display:none"></tr>
             <tr>
                 <td colspan="4" style="padding:0px">
-                    <p id="D'.$i.'" style="display:none; text-align:center;">Input Pcs : <input style="display:inline; width:50%" class="w3-input w3-border" type="number" min="1" max='.'"'.$result[$i]["TotalPcs"].'"'.' value="1" name="inputPcs'.$result[$i]["Id_Sampel"].$result[$i]["Id_Warna"].'"/></p>
+                    <p id="D' . $i . '" style="display:none; text-align:center;">Input Pcs : <input style="display:inline; width:50%" class="w3-input w3-border" type="number" min="1" max=' . '"' . $result[$i]["TotalPcs"] . '"' . ' value="1" name="inputPcs' . $result[$i]["Id_Sampel"] . $result[$i]["Id_Warna"] . '"/></p>
                 </td>
             </tr>';
             }

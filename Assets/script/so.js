@@ -8,3 +8,7 @@ function showFunction(id) {
         x.className = x.className.replace(" w3-show", "");
     }
 }
+
+if (createSOPDF) {
+    window.open('SOPDF', '_blank');
+}
