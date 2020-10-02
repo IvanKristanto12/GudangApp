@@ -44,7 +44,6 @@ ORDER BY Sampel , Warna
 GO
 
 exec GetListKain 1
-
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 2*/
 --List PO 
@@ -175,16 +174,20 @@ CREATE OR ALTER PROC CreatePO
 	@inputTanggal DATE,
 	@inputPenjual INT,
 	@inputPembeli INT,
-	@inputKain VARCHAR(8000)
+	@inputKain VARCHAR(8000),
+	@inputNoSO INT,
+	@inputKeterangan VARCHAR(500)
 AS
 DECLARE @totalPcs INT, @totalMeter FLOAT, @noPO INT
 SET @totalPcs = 0
 SET @totalMeter = 0
 
 INSERT INTO PurchaseOrder
-	(Tanggal,Id_Penjual,Id_Pembeli,Total_Pcs,Total_Meter,Status)
+	(Tanggal,Id_Penjual,Id_Pembeli,Total_Pcs,Total_Meter,Status,No_SO,KeteranganPO)
 VALUES
-	(@inputTanggal, @inputPenjual, @inputPembeli, @totalPcs, @totalMeter, 0)
+	(@inputTanggal, @inputPenjual, @inputPembeli, @totalPcs, @totalMeter, 0, @inputNoSO, @inputKeterangan)
+
+UPDATE SuratOrder SET Status = 1 WHERE No_SO = @inputNoSO
 
 SET @noPO = (SELECT MAX(No_PO)
 FROM PurchaseOrder)
@@ -217,7 +220,7 @@ UPDATE PurchaseOrder SET Total_Pcs = @totalPcs , Total_Meter = @totalMeter WHERE
 
 GO
 
-exec CreatePO '2020-07-31' , 1 , 1 , '2,'
+exec CreatePO '2020-07-31' , 1 , 1 , '2,',1,'Tidak ada'
 
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 8*/
@@ -706,18 +709,64 @@ GO
 CREATE OR ALTER PROC GetDetailSO
 	@inputNoSO INTEGER
 AS
-SELECT DISTINCT SuratOrder.No_SO , Tanggal, SuratOrder.Id_Penjual, SuratOrder.Id_Pembeli, SuratOrder.Keterangan, [Status], ListSampelSO.Id_Sampel, ListSampelSO.Id_Warna, ListSampelSO.Total_Pcs, Penjual.Nama as 'Penjual', Penjual.Kode as 'KodePenjual', Pembeli.Nama as 'Pembeli' , Pembeli.Alamat as 'AlamatPembeli', Sampel.Id_Sampel, Sampel.Nama as 'Sampel', Warna.Id_Warna , Warna.Nama as 'Warna', NomorWarna, Total_Pcs
-FROM SuratOrder
-	JOIN ListSampelSO ON SuratOrder.No_SO = ListSampelSO.No_SO
-	JOIN Penjual ON Penjual.Id_Penjual = SuratOrder.Id_Penjual
-	JOIN Pembeli ON Pembeli.Id_Pembeli = SuratOrder.Id_Pembeli
-	JOIN Sampel ON Sampel.Id_Sampel = ListSampelSO.Id_Sampel
-	JOIN Warna ON Warna.Id_Warna = ListSampelSO.Id_Warna
-WHERE SuratOrder.No_SO = @inputNoSO
+IF(@inputNoSO = 0)
+BEGIN
+	SELECT DISTINCT SuratOrder.No_SO ,Penjual.Nama as "Penjual" ,Penjual.Kode as 'KodePenjual', Pembeli.Nama as 'Pembeli' , Pembeli.Alamat as 'AlamatPembeli'
+	FROM SuratOrder
+		JOIN Penjual ON Penjual.Id_Penjual = SuratOrder.Id_Penjual
+		JOIN Pembeli ON Pembeli.Id_Pembeli = SuratOrder.Id_Pembeli
+	WHERE Status = 0
+END
+ELSE 
+BEGIN
+	SELECT DISTINCT SuratOrder.No_SO , Tanggal, SuratOrder.Id_Penjual, SuratOrder.Id_Pembeli, SuratOrder.Keterangan, [Status], ListSampelSO.Id_Sampel, ListSampelSO.Id_Warna, ListSampelSO.Total_Pcs, Penjual.Nama as 'Penjual', Penjual.Kode as 'KodePenjual', Pembeli.Nama as 'Pembeli' , Pembeli.Alamat as 'AlamatPembeli', Sampel.Id_Sampel, Sampel.Nama as 'Sampel', Warna.Id_Warna , Warna.Nama as 'Warna', NomorWarna, Total_Pcs
+	FROM SuratOrder
+		JOIN ListSampelSO ON SuratOrder.No_SO = ListSampelSO.No_SO
+		JOIN Penjual ON Penjual.Id_Penjual = SuratOrder.Id_Penjual
+		JOIN Pembeli ON Pembeli.Id_Pembeli = SuratOrder.Id_Pembeli
+		JOIN Sampel ON Sampel.Id_Sampel = ListSampelSO.Id_Sampel
+		JOIN Warna ON Warna.Id_Warna = ListSampelSO.Id_Warna
+	WHERE SuratOrder.No_SO = @inputNoSO AND [Status] = 0
+END
 GO
 
-exec GetDetailSO 1
+exec GetDetailSO 4
+--------------------------------------------------------------------------------------------------
+/*Procedure No. 29*/
+--Insert HapusSO
+--@param No_SO
+--@return 
+USE GordenDB
+GO
+CREATE OR ALTER PROC HapusSO
+	@inputNoSO INTEGER
+AS
 
+UPDATE SuratOrder SET Status = 2 WHERE No_SO = @inputNoSO
+GO
+
+exec HapusSO 1
+--------------------------------------------------------------------------------------------------
+/*Procedure No. 30*/
+--List Stock 
+--@param No SO
+--@return table 
+USE GordenDB
+GO
+CREATE OR ALTER PROC GetListKainBySO
+	@inputNoSO INT
+AS
+
+SELECT DISTINCT Id_Kain, NomorKarung, Meter, TanggalMasuk, Sampel, Warna, "Jenis Kain"
+-- SELECT DISTINCT *
+FROM ListStockKain
+	JOIN ListSampelSO as a ON a.Id_Sampel = ListStockKain.Id_Sampel
+	JOIN ListSampelSO as b ON b.Id_Warna = ListStockKain.Id_Warna
+WHERE Status = 1 AND a.No_SO = @inputNoSO
+ORDER BY Sampel , Warna
+GO
+
+exec GetListKainBySO 1
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 /*****List View*****/
@@ -735,7 +784,7 @@ USE GordenDB
 GO
 CREATE OR ALTER VIEW ListStockKain
 AS
-	SELECT Kain.Id_Kain, NomorKarung, Meter, TanggalMasuk, TanggalKeluar, Sampel.Nama as 'Sampel', Warna.Nama as 'Warna', JenisKain.Nama as 'Jenis Kain', Status
+	SELECT Kain.Id_Kain, NomorKarung, Meter, TanggalMasuk, TanggalKeluar, Sampel.Id_Sampel, Sampel.Nama as 'Sampel', Warna.Id_Warna, Warna.NomorWarna as 'NomorWarna', Warna.Nama as 'Warna', JenisKain.Nama as 'Jenis Kain', Status
 	FROM Kain
 		JOIN KainSampelWarna ON Kain.Id_Kain = KainSampelWarna.Id_Kain
 		JOIN Sampel ON Sampel.Id_Sampel = KainSampelWarna.Id_Sampel

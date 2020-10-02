@@ -60,9 +60,9 @@ class SO extends Controller implements ViewInterface
     public static function FormSO()
     {
         //kiri
-        echo '
-            <div class=" w3-half">
-            <h4 class="w3-center w3-border-bottom w3-padding"><b>Form SO</u></b></h4>
+        echo '<div class=" w3-half">';
+        self::listSOmodal();
+        echo '<h4 class="w3-center w3-border-bottom w3-padding"><b>Form SO</b></h4>
             <form action="SOHandler" method="POST" class="w3-container">
                 <h4><b>Tanggal</b></h4>
                 <input type="date" class="w3-select w3-border" min="' . date("Y-m-d") . '" value="' . date("Y-m-d") . '" name="inputTanggalSO" required/> 
@@ -128,5 +128,61 @@ class SO extends Controller implements ViewInterface
             </div>
         </form>
         <script src="Assets/script/so.js"> </script>';
+    }
+
+    private static function listSOmodal()
+    {
+        echo '<button class="w3-button w3-blue w3-border w3-text-black w3-large" style="float:left" onclick="document.getElementById(' . "'id01'" . ').style.display=' . "'block'" . '" >List SO</button>';
+        echo '<div id="id01" class="w3-modal">
+        <div class="w3-modal-content w3-card-4 w3-animate-zoom" >
+         <header class="w3-container w3-blue w3-text-black"> 
+          <span onclick="document.getElementById(' . "'id01'" . ').style.display=' . "'none'" . '" 
+          class="w3-button w3-blue w3-xlarge w3-display-topright ">&times;</span>
+          <h2>List SO</h2>
+         </header>
+       
+         <div class="w3-bar w3-border-bottom">
+          <button class="tablink w3-bar-item w3-button" onclick="openCity(event, ' . "'listSO'" . ')">ListSO</button>
+        </div>';
+
+        self::tabListSO();
+
+        echo '<div class="w3-container w3-blue w3-padding" style="height:5%">
+        </div>
+        </div>
+       </div>
+       
+       ';
+        echo '<script src="Assets/script/listSOmodal.js"></script>';
+    }
+    private static function tabListSO()
+    {
+        echo '<div id="listSO" class="w3-container tab tabsize"  style="overflow-y:scroll">
+        <br>
+        <form action="SOHandler" method="GET">
+        <table class="w3-table-all">
+        <tr>
+            <th class="w3-center">No SO</th>
+            <th class="w3-center">Penjual</th>
+            <th class="w3-center">Pembeli</th>
+            <th class="w3-center">Cetak</th>
+            <th class="w3-center">Hapus</th>
+        </tr>';
+
+        $result = self::$db->executeQuery("GetDetailSO",[0]);
+        for($i = 0 ; $i < count($result) ; $i++){
+            echo'<tr>
+                <td class="w3-center">'.$result[$i]["No_SO"].'</td>
+                <td class="w3-center">'.$result[$i]["Penjual"]."/".$result[$i]["KodePenjual"].'</td>
+                <td class="w3-center">'.$result[$i]["Pembeli"]."/".$result[$i]["AlamatPembeli"].'</td>
+                <th class="w3-center"><button class="w3-button w3-green w3-text-black" name="CetakSO" value=' . $result[$i]["No_SO"] . '>Cetak</button></th>
+                <th class="w3-center"><button class="w3-button w3-red w3-text-black" name="HapusSO" value=' . $result[$i]["No_SO"] . '>Hapus</button></th>
+            </tr>';
+        }
+
+        echo '
+        </form>
+        </table>
+       </div>';
     }
 }

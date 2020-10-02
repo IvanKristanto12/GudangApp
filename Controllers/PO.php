@@ -69,28 +69,55 @@ class PO extends Controller implements ViewInterface
 
         //kiri
         echo '
-            <div class=" w3-half">
+            <div class=" w3-half" style="overflow-y:scroll; height:83%">
             <h4 class="w3-center w3-border-bottom w3-padding"><b>Form PO</u></b></h4>
             <form action="POHandler" method="GET" class="w3-container foS">
                 <h4><b>Tanggal</b></h4>
                 <input type="date" class="w3-select w3-border" min="' . date("Y-m-d") . '" value="' . date("Y-m-d") . '" name="inputTanggalPO" required/> 
-                <h4><b>Penjual</b></h4>
-                <select class="w3-select w3-border w3-padding-small" name="inputPenjual" required>
-                <option value="" disabled selected>Pilih Penjual</option>';
-        $result = self::$db->executeQuery("GetListPenjual", [""]);
+            ';
+        echo '<h4><b>Nomor SO</b></h4>
+        <select class="w3-select w3-border w3-padding-small" name="inputNoSO" required onchange="showListKain(this.value)">
+        <option value="" disabled selected>Pilih No SO</option>';
+        $result = self::$db->executeQuery("GetDetailSO", [0]);
         for ($i = 0; $i < count($result); $i++) {
-            echo '<option value="' . $result[$i]["Id_Penjual"] . '">' . $result[$i]["Nama"] . ' - ' . $result[$i]["Kode"] . '</option>';
+            echo '<option value="' . $result[$i]["No_SO"] . '">' . $result[$i]["No_SO"] . "/" . $result[$i]["KodePenjual"] . "/" . $result[$i]["Pembeli"] . "-" . $result[$i]["AlamatPembeli"] . '</option>';
         }
-        echo '        
+        echo '
+        </select>
+
+        <br>
+        <div id="fieldDetailSO">
+        </div>
+        ';
+        echo '
+        <h4><b>Penjual</b></h4>
+            <select id="pilihPenjual" class="w3-select w3-border w3-padding-small" name="inputPenjual" required disabled>
+                <option value="" disabled selected>Pilih Penjual</option>       
             </select> 
-            <h4><b>Pembeli</b></h4>
-            <select class="w3-select w3-border w3-padding-small" name="inputPembeli" required>
-                <option value="" disabled selected>Pilih Pembeli</option>';
-        $result = self::$db->executeQuery("GetListPembeli", [""]);
-        for ($i = 0; $i < count($result); $i++) {
-            echo '<option value="' . $result[$i]["Id_Pembeli"] . '">' . $result[$i]["Nama"] . ' - ' . $result[$i]["Alamat"] . '</option>';
-        }
-        echo '</select>
+        <h4><b>Pembeli</b></h4>
+            <select id="pilihPembeli" class="w3-select w3-border w3-padding-small" name="inputPembeli" required disabled>
+                <option value="" disabled selected>Pilih Pembeli</option>
+            </select>';
+
+        // echo ' <h4><b>Penjual</b></h4>
+        //         <select class="w3-select w3-border w3-padding-small" name="inputPenjual" required>
+        //         <option value="" disabled selected>Pilih Penjual</option>';
+        // $result = self::$db->executeQuery("GetListPenjual", [""]);
+        // for ($i = 0; $i < count($result); $i++) {
+        //     echo '<option value="' . $result[$i]["Id_Penjual"] . '">' . $result[$i]["Nama"] . ' - ' . $result[$i]["Kode"] . '</option>';
+        // }
+        // echo '        
+        //     </select> 
+        //     <h4><b>Pembeli</b></h4>
+        //     <select class="w3-select w3-border w3-padding-small" name="inputPembeli" required>
+        //         <option value="" disabled selected>Pilih Pembeli</option>';
+        // $result = self::$db->executeQuery("GetListPembeli", [""]);
+        // for ($i = 0; $i < count($result); $i++) {
+        //     echo '<option value="' . $result[$i]["Id_Pembeli"] . '">' . $result[$i]["Nama"] . ' - ' . $result[$i]["Alamat"] . '</option>';
+        // }
+        // echo '</select>';
+        echo '<h4><b>Keterangan</b></h4>
+        <textarea class="w3-input w3-border" name="inputKeterangan"></textarea> 
         <h4><b>Total Pcs</b></h4>
         <input id="totalPcs" class="total" type="number" value="0" disabled/>
         <h4><b>Total Meter</b></h4>
@@ -102,7 +129,7 @@ class PO extends Controller implements ViewInterface
         //kanan
         echo '
             <div class="w3-half rightSide">
-                <table class="w3-table-all">
+                <table id="listKainTable" class="w3-table-all">
                     <tr class="w3-yellow w3-border">
                         <th class="w3-center">Pilih</th>
                         <th class="w3-center">Sampel</th>
@@ -112,21 +139,23 @@ class PO extends Controller implements ViewInterface
                         <th class="w3-center">Tanggal Masuk</th>
                     </tr>';
 
-        $result = self::$db->executeQuery("GetListKain", ["1"]);
-        for ($i = 0; $i < count($result); $i++) {
-            echo '
-            <tr>
-                <td class="w3-center"><input class="checkSize" value="' . $result[$i]["Id_Kain"] . '" type="checkbox" onchange="setTotal()"/></td>
-                <td class="w3-center">' . $result[$i]["Sampel"] . '</td>
-                <td class="w3-center">' . $result[$i]["Warna"] . '</td>
-                <td class="w3-center">' . $result[$i]["NomorKarung"] . '</td>
-                <td id="meter" class="w3-center">' . $result[$i]["Meter"] . '</td>
-                <td class="w3-center">' . $result[$i]["TanggalMasuk"] . '</td>
-            </tr>';
-        }
+        // $result = self::$db->executeQuery("GetListKain", ["1"]);
+        // for ($i = 0; $i < count($result); $i++) {
+        //     echo '
+        //     <tr>
+        //         <td class="w3-center"><input class="checkSize" value="' . $result[$i]["Id_Kain"] . '" type="checkbox" onchange="setTotal()"/></td>
+        //         <td class="w3-center">' . $result[$i]["Sampel"] . '</td>
+        //         <td class="w3-center">' . $result[$i]["Warna"] . '</td>
+        //         <td class="w3-center">' . $result[$i]["NomorKarung"] . '</td>
+        //         <td id="meter" class="w3-center">' . $result[$i]["Meter"] . '</td>
+        //         <td class="w3-center">' . $result[$i]["TanggalMasuk"] . '</td>
+        //     </tr>';
+        // }
         echo '
+        </table>
             </div>
             </form>
+            
         <script src="Assets/script/po.js"></script>';
     }
 }

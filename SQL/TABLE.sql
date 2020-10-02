@@ -77,7 +77,8 @@ CREATE TABLE PurchaseOrder
 	Total_Pcs INT,
 	Total_Meter FLOAT,
 	Status INT,
-	No_SO INT NOT NULL FOREIGN KEY REFERENCES SuratOrder(No_SO)
+	No_SO INT NOT NULL FOREIGN KEY REFERENCES SuratOrder(No_SO),
+	KeteranganPO VARCHAR(500)
 )
 
 CREATE TABLE SuratJalan
@@ -113,5 +114,6 @@ CREATE TABLE ListSampelSO
 	Id_Sampel INT NOT NULL FOREIGN KEY REFERENCES Sampel(Id_Sampel),
 	Id_Warna INT NOT NULL FOREIGN KEY REFERENCES Warna(Id_Warna),
 	Total_Pcs INT NOT NULL,
-	PRIMARY KEY (No_SO,Id_Sampel,Id_Warna)
+	-- PRIMARY KEY (No_SO,Id_Sampel,Id_Warna)
 )
+

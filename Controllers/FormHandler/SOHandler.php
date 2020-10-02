@@ -14,3 +14,12 @@ if (isset($_POST["submitCreateSO"])) {
     }
     $_SESSION["SOPDF"] = self::$db->executeQuery("GetDetailSO", [$noSO]);
 }
+if (isset($_GET["CetakSO"])) {
+    $noSO = $_GET["CetakSO"]; 
+    $_SESSION["SOPDF"] = self::$db->executeQuery("GetDetailSO", [$noSO]);
+}
+if (isset($_GET["HapusSO"])) {
+    $noSO = $_GET["HapusSO"]; 
+    self::$db->executeNonQuery("HapusSO", [$noSO]);
+    // $_SESSION["SOPDF"] = self::$db->executeQuery("GetDetailSO", [$noSO]);
+}

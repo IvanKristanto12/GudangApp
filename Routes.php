@@ -44,6 +44,10 @@ if (isset($_COOKIE["userpermission"])) {
             AJAX::getListWarna();
         });
 
+        Route::set('getBySO', function () {
+            AJAX::getBySO();
+        });
+
         //FormHandler
         Route::set('StockFormHandler', function () {
             Controller::SubmitForm("StockHandler");
