@@ -459,31 +459,39 @@ CREATE OR ALTER PROC InsertWarnaBaru
 	@inputNama VARCHAR(50),
 	@inputNomorBaru INT
 AS
-DECLARE @i VARCHAR(50)
-IF @inputNomorBaru = 0
+IF @inputNama IS NOT NULL AND @inputNomorBaru IS NOT NULL
 BEGIN
-	SET @i = (SELECT DISTINCT Nama
-	FROM Warna
-	WHERE Nama LIKE UPPER(@inputNama))
+	DECLARE @i VARCHAR(50)
+	IF @inputNomorBaru = 0
+	BEGIN
+		SET @i = (SELECT DISTINCT Nama
+		FROM Warna
+		WHERE Nama LIKE UPPER(@inputNama))
+	END
+	ELSE 
+	BEGIN
+		SET @i = (SELECT Id_Warna
+		FROM Warna
+		WHERE Nama LIKE UPPER(@inputNama) AND NomorWarna = @inputNomorBaru)
+	END
+	IF @i IS NULL
+	BEGIN
+		INSERT INTO Warna
+			(Nama , NomorWarna)
+		VALUES
+			(UPPER(@inputNama) , @inputNomorBaru)
+		SELECT 1
+	END
+	ELSE 
+	BEGIN
+		SELECT 0
+	END
 END
 ELSE 
 BEGIN
-	SET @i = (SELECT Id_Warna
-	FROM Warna
-	WHERE Nama LIKE UPPER(@inputNama) AND NomorWarna = @inputNomorBaru)
-END
-IF @i IS NULL
-	BEGIN
-	INSERT INTO Warna
-		(Nama , NomorWarna)
-	VALUES
-		(UPPER(@inputNama) , @inputNomorBaru)
-	SELECT 1
-END
-	ELSE 
-	BEGIN
 	SELECT 0
 END
+
 GO
 
 exec InsertWarnaBaru 'hitam',10
@@ -502,7 +510,7 @@ DECLARE @i INT
 SET @i = (SELECT Id_Penjual
 FROM Penjual
 WHERE Kode LIKE @inputKode)
-IF @i IS NULL
+IF @i IS NULL AND @inputNama IS NOT NULL AND @inputKode IS NOT NULL
 	BEGIN
 	INSERT INTO Penjual
 		(Nama,Kode)
@@ -533,7 +541,7 @@ DECLARE @i INT
 SET @i = (SELECT Id_Pembeli
 FROM Pembeli
 WHERE Alamat LIKE @inputAlamat AND Nama  LIKE @inputNama)
-IF @i IS NULL
+IF @i IS NULL AND @inputNama IS NOT NULL AND @inputAlamat IS NOT NULL
 	BEGIN
 	INSERT INTO Pembeli
 		(Nama,Alamat)
@@ -547,7 +555,7 @@ END
 END
 GO
 
-exec InsertPembeliBaru 'Buyer4' , 'Garut'
+exec InsertPembeliBaru 'Buyer5' , 'Gunung'
 
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 21*/
@@ -711,7 +719,7 @@ CREATE OR ALTER PROC GetDetailSO
 AS
 IF(@inputNoSO = 0)
 BEGIN
-	SELECT DISTINCT SuratOrder.No_SO ,Penjual.Nama as "Penjual" ,Penjual.Kode as 'KodePenjual', Pembeli.Nama as 'Pembeli' , Pembeli.Alamat as 'AlamatPembeli'
+	SELECT DISTINCT SuratOrder.No_SO , Penjual.Nama as "Penjual" , Penjual.Kode as 'KodePenjual', Pembeli.Nama as 'Pembeli' , Pembeli.Alamat as 'AlamatPembeli'
 	FROM SuratOrder
 		JOIN Penjual ON Penjual.Id_Penjual = SuratOrder.Id_Penjual
 		JOIN Pembeli ON Pembeli.Id_Pembeli = SuratOrder.Id_Pembeli

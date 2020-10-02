@@ -34,21 +34,25 @@ if (isset($_GET['submitTambahStock'])) {
         $_SESSION["done"] = true;
     }
 } else if (isset($_GET['submitTambahPenjual'])) {
-    $result = self::$db->executeQuery("InsertPenjualBaru", ["'" . $_GET['inputPenjualBaru'] . "'","'" . $_GET['inputKodeBaru'] . "'"]);
+    $result = self::$db->executeQuery("InsertPenjualBaru", ["'" . $_GET['inputPenjualBaru'] . "'", "'" . $_GET['inputKodeBaru'] . "'"]);
     if ($result[0][""] == 0) {
         $_SESSION["done"] = false;
     } else {
         $_SESSION["done"] = true;
     }
-}  else if (isset($_GET['submitTambahPembeli'])) {
-    $result = self::$db->executeQuery("InsertPembeliBaru", ["'" . $_GET['inputPembeliBaru'] . "'","'" . $_GET['inputAlamatBaru'] . "'"]);
+} else if (isset($_GET['submitTambahPembeli'])) {
+    $result = self::$db->executeQuery("InsertPembeliBaru", ["'" . $_GET['inputPembeliBaru'] . "'", "'" . $_GET['inputAlamatBaru'] . "'"]);
     if ($result[0][""] == 0) {
         $_SESSION["done"] = false;
     } else {
         $_SESSION["done"] = true;
     }
-} else if(isset($_GET['submitTambahJenisKain'])){
+} else if (isset($_GET['submitTambahJenisKain'])) {
     $jenisKain = $_GET['inputJenisKainBaru'];
-    
+    $result = self::$db->executeQuery("InsertJenisKainBaru", ["'" . $_GET['inputJenisKainBaru'] . "'"]);
+    if ($result[0][""] == 0) {
+        $_SESSION["done"] = false;
+    } else {
+        $_SESSION["done"] = true;
+    }
 }
-

@@ -91,11 +91,11 @@ class PO extends Controller implements ViewInterface
         ';
         echo '
         <h4><b>Penjual</b></h4>
-            <select id="pilihPenjual" class="w3-select w3-border w3-padding-small" name="inputPenjual" required disabled>
+            <select id="pilihPenjual" class="w3-select w3-border w3-padding-small" name="inputPenjual" required>
                 <option value="" disabled selected>Pilih Penjual</option>       
             </select> 
         <h4><b>Pembeli</b></h4>
-            <select id="pilihPembeli" class="w3-select w3-border w3-padding-small" name="inputPembeli" required disabled>
+            <select id="pilihPembeli" class="w3-select w3-border w3-padding-small" name="inputPembeli" required>
                 <option value="" disabled selected>Pilih Pembeli</option>
             </select>';
 

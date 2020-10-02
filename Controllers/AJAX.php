@@ -75,6 +75,12 @@ class AJAX extends Controller
                     <td class="w3-center w3-border">' . $result[$i]["Sampel"] . ' ' . $result[$i]["Warna"] . '</td>
                     <td class="w3-center w3-border">' . $result[$i]["Total_Pcs"] . '</td>
                 </tr>';
+            } else {
+                $respondText .=
+                    '<tr>
+                    <td class="w3-center w3-border">' . $result[$i]["Sampel"] . ' ' . $result[$i]["Warna"] . '-' . $result[$i]["NomorWarna"] . '</td>
+                    <td class="w3-center w3-border">' . $result[$i]["Total_Pcs"] . '</td>
+                </tr>';
             }
         }
         $respondText .= '</table>
