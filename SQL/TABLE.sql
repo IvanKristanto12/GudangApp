@@ -1,3 +1,7 @@
+USE GordenDB
+GO
+CREATE OR ALTER PROC NewDatabase
+AS
 --------------------------------------------------------------------------------------------------
 /*Query Create Table*/
 -- Permission 0 - admin, Permission 1 - user
@@ -117,3 +121,6 @@ CREATE TABLE ListSampelSO
 	-- PRIMARY KEY (No_SO,Id_Sampel,Id_Warna)
 )
 
+GO
+
+exec NewDatabase

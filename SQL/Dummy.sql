@@ -1,5 +1,10 @@
 --------------------------------------------------------------------------------------------------
 /*Query Data Dummy*/
+USE GordenDB
+GO
+CREATE OR ALTER PROC Dummy 
+AS
+
 INSERT INTO Users
     (Nama,Password,Permission)
 VALUES
@@ -425,4 +430,6 @@ INSERT INTO SuratJalan
     (Tanggal,No_PO,Keterangan)
 VALUES('2020-07-31', 3, '')
 
+GO
 
+exec Dummy
