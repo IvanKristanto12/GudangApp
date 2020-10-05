@@ -110,7 +110,7 @@ class POPDF extends FPDF
         $this->Output();
     }
 
-    public function CreateCustomPDF($noPO, $namaPembeli, $tanggal, $Sampel, $allPcs, $allMeter)
+    public function CreateCustomPDF($noPO, $namaPembeli, $tanggal, $Sampel, $allPcs, $allMeter,$keterangan)
     {
         $this->noPO = $noPO;
         $this->AliasNbPages();
@@ -171,8 +171,16 @@ class POPDF extends FPDF
         $this->Cell(2.5, 0.5, 'All Meter', 1, 0, '');
         $this->SetFont('Arial', '', 11);
         $this->Cell(0, 0.5, ' ' . $allMeter, 1, 1, '');
-        $this->Output();
 
+        $this->ln(0.3);
+        $this->SetFont('Arial', 'B', 10);
+        $this->Cell(0, 0.6, 'Keterangan :', 0, 1);
+        $this->SetFont('Arial', '', 10);
+        $ket = [];
+        $ket = explode("\n", $keterangan);
+        for ($i = 0; $i < count($ket); $i++) {
+            $this->Cell(0, 0.6, $ket[$i], 0, 1, 'L');
+        }
         $this->Output();
     }
 }
@@ -214,9 +222,11 @@ if (isset($_SESSION["POPDF"])) {
 
     $sampel[$idx][2] = $arrKain;
 
+    $keterangan = $result[0]["KeteranganPO"];
+
     $pdf = new POPDF('L', 'cm', array(14, 21.6));
     $pdf->SetMargins(0.3,0.3,0.3);
-    $pdf->CreateCustomPDF($noPO, $pembeli, $tanggal, $sampel, $totalPcs, $totalMeter);
+    $pdf->CreateCustomPDF($noPO, $pembeli, $tanggal, $sampel, $totalPcs, $totalMeter, $keterangan);
 }
 session_unset();
 session_destroy();

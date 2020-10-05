@@ -105,8 +105,7 @@ class SO extends Controller implements ViewInterface
             if ($result[$i]["TotalPcs"] != null) {
                 echo '
             <tr>
-                <td class="w3-center"><input name="sampelchecked[]" class="checkSize" value="' . $result[$i]["Id_Sampel"] . '" type="checkbox" onclick="showFunction(' . "'D" . $i . "'" . ')"/></td>
-                <input type="hidden" name="warna' . $result[$i]["Id_Sampel"] . '" value="' . $result[$i]["Id_Warna"] . '"/>
+                <td class="w3-center"><input name="sampelchecked[]" class="checkSize" value="' . $result[$i]["Id_Sampel"] . ',' . $result[$i]["Id_Warna"] . '" type="checkbox" onclick="showFunction(' . "'D" . $i . "'" . ')"/></td>
                 <td class="w3-center">' . $result[$i]["Sampel"] . '</td>';
                 if ($result[$i]["NomorWarna"] == null) {
                     echo '<td class="w3-center">' . $result[$i]["Warna"] . '</td>';
@@ -169,12 +168,12 @@ class SO extends Controller implements ViewInterface
             <th class="w3-center">Hapus</th>
         </tr>';
 
-        $result = self::$db->executeQuery("GetDetailSO",[0]);
-        for($i = 0 ; $i < count($result) ; $i++){
-            echo'<tr>
-                <td class="w3-center">'.$result[$i]["No_SO"].'</td>
-                <td class="w3-center">'.$result[$i]["Penjual"]."/".$result[$i]["KodePenjual"].'</td>
-                <td class="w3-center">'.$result[$i]["Pembeli"]."/".$result[$i]["AlamatPembeli"].'</td>
+        $result = self::$db->executeQuery("GetDetailSO", [0]);
+        for ($i = 0; $i < count($result); $i++) {
+            echo '<tr>
+                <td class="w3-center">' . $result[$i]["No_SO"] . '</td>
+                <td class="w3-center">' . $result[$i]["Penjual"] . "/" . $result[$i]["KodePenjual"] . '</td>
+                <td class="w3-center">' . $result[$i]["Pembeli"] . "/" . $result[$i]["AlamatPembeli"] . '</td>
                 <th class="w3-center"><button class="w3-button w3-green w3-text-black" name="CetakSO" value=' . $result[$i]["No_SO"] . '>Cetak</button></th>
                 <th class="w3-center"><button class="w3-button w3-red w3-text-black" name="HapusSO" value=' . $result[$i]["No_SO"] . '>Hapus</button></th>
             </tr>';

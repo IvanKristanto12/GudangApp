@@ -39,6 +39,10 @@ if (isset($_COOKIE["userpermission"])) {
             SJ::CreateView('AllList');
         });
 
+        Route::set('xlsx', function () {
+            Xlsx::CreateView('Xlsx');
+        });
+
         //Function
         Route::set('getListWarna', function () {
             AJAX::getListWarna();

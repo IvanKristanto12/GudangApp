@@ -411,7 +411,7 @@ END
 END
 GO
 
-exec GetDetailPO 1
+exec GetDetailPO 0
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 16*/
 --list PO
@@ -810,7 +810,7 @@ GO
 CREATE OR ALTER VIEW ListPO
 AS
 	SELECT PurchaseOrder.No_PO, PurchaseOrder.Tanggal, Penjual.Kode as 'KodePenjual', Penjual.Nama as 'Penjual', Pembeli.Nama as 'Pembeli', Pembeli.Alamat, PurchaseOrder.Total_Pcs ,
-		PurchaseOrder.Total_Meter, NomorKarung, Meter, ListStockKain.Sampel, ListStockKain.Warna , ListStockKain.[Jenis Kain]
+		PurchaseOrder.Total_Meter, NomorKarung, Meter, ListStockKain.Sampel, ListStockKain.Warna , ListStockKain.[Jenis Kain] , KeteranganPO
 	FROM PurchaseOrder
 		JOIN Penjual ON PurchaseOrder.Id_Penjual = Penjual.Id_Penjual
 		JOIN Pembeli ON PurchaseOrder.Id_Pembeli = Pembeli.Id_Pembeli

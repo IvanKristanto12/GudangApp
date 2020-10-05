@@ -155,6 +155,7 @@ class SOPDF extends FPDF
             $this->Cell(4, 0.6, $barang[$i]["Total_Pcs"], 1, 1, 'C');
         }
         $this->ln(0.3);
+        $this->SetFont('Arial', 'B', 10);
         $this->Cell(0, 0.6, 'Keterangan :', 0, 1);
         $this->SetFont('Arial', '', 10);
         $ket = [];
