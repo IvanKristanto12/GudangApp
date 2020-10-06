@@ -775,6 +775,57 @@ ORDER BY Sampel , Warna
 GO
 
 exec GetListKainBySO 1
+
+--------------------------------------------------------------------------------------------------
+/*Procedure No. 31*/
+--List Sampel
+--@param -
+--@return list Sampel
+USE GordenDB
+GO
+CREATE OR ALTER PROC GetListDetailSampel
+AS
+SELECT Sampel.Id_Sampel, Sampel.Nama as 'Sampel', Warna.Nama as 'Warna', Warna.NomorWarna as 'NomorWarna', JenisKain.Nama as 'JenisKain'
+FROM Sampel
+	JOIN SampelWarna ON SampelWarna.Id_Sampel = Sampel.Id_Sampel
+	JOIN Warna ON Warna.Id_Warna = SampelWarna.Id_Warna
+	JOIN JenisKain ON JenisKain.Id_JenisKain = Sampel.Id_JenisKain
+GO
+
+exec GetListDetailSampel
+
+--------------------------------------------------------------------------------------------------
+/*Procedure No. 32*/
+-- Sampel
+--@param -
+--@return Sampel
+USE GordenDB
+GO
+CREATE OR ALTER PROC GetSampelById
+@inputId INTEGER
+AS
+SELECT Nama as 'Sampel'
+FROM Sampel
+WHERE Id_Sampel = @inputId
+GO
+
+exec GetSampelById 1
+--------------------------------------------------------------------------------------------------
+/*Procedure No. 33*/
+-- Warna
+--@param -
+--@return Warna
+USE GordenDB
+GO
+CREATE OR ALTER PROC GetWarnaById
+@inputId INTEGER
+AS
+SELECT Nama as 'Warna' , NomorWarna as 'NomorWarna'
+FROM Warna
+WHERE Id_Warna = @inputId
+GO
+
+exec GetWarnaById 1
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 /*****List View*****/

@@ -44,19 +44,11 @@ class Xlsx extends Controller
             </div>';
 	}
 
-	public static function CreateFooter()
-	{
-		echo '
-        <div class="w3-container w3-theme-d2  w3-display-bottommiddle" style=" width:100%; height:2%";>
-        </div>';
-	}
-
 	public static function createBody()
 	{
 		self::CreateHeader();
 		self::CreateNavigationBar();
 		self::parseForm();
-		self::CreateFooter();
 	}
 
 	public static function createPage()
@@ -73,34 +65,120 @@ class Xlsx extends Controller
 		if (isset($_FILES['file'])) {
 
 			if ($xlsx = SimpleXLSX::parse($_FILES['file']['tmp_name'])) {
-
-				echo '<h2>Parsing Result</h2>';
-				echo '<table border="1" cellpadding="3" style="border-collapse: collapse">';
+				echo '
+				<a class="w3-button w3-blue w3-text-black w3-border" href="xlsx"><b>New Insert</b></a>
+				<div class="w3-center w3-padding w3-container">
+				<h4 class="w3-padding w3-green w3-text-black"><b>Insert Result</b></h4>
+				<table border="1" cellpadding="3" style="border-collapse: collapse" class="w3-table-all">
+				<tr>
+					<th class="w3-center w3-yellow">No</th>
+					<th class="w3-center w3-yellow">Tanggal</th>
+					<th class="w3-center w3-yellow">Sampel</th>
+					<th class="w3-center w3-yellow">Warna</th>
+					<th class="w3-center w3-yellow">Nomor Karung</th>
+					<th class="w3-center w3-yellow">Meter</th>
+				</tr>';
 
 				$dim = $xlsx->dimension();
 				$cols = $dim[0];
-
+				$rowNum = 1;
 				foreach ($xlsx->rows() as $k => $r) {
-					// if ($k == 0) continue; // skip first row
-					echo '<tr>';
+					if ($k == 0) continue; // skip first row
+					echo '<tr> <td class="w3-center">' . $rowNum . '</td>';
+					$rowNum++;
+					$barang = [];
 					for ($i = 0; $i < $cols; $i++) {
-						if ($i != 4) {
-							echo '<td>' . (isset($r[$i]) ? $r[$i] : '&nbsp;') . '</td>';
+						if ($i == 0) {
+							echo '<td class="w3-center">' . date("Y-m-d", strtotime($r[$i])) . '</td>';
+							$barang[$i] = date("Y-m-d", strtotime($r[$i]));
+						} else if ($i == 1) {
+							$sampel = self::$db->executeQuery("GetSampelById", [$r[$i]]);
+							echo '<td class="w3-center">' . $sampel[0]["Sampel"] . '</td>';
+							$barang[$i] = $r[$i];
+						} else if ($i == 2) {
+							$warna = self::$db->executeQuery("GetWarnaById", [$r[$i]]);
+							if ($warna[0]["NomorWarna"] == null) {
+								echo '<td class="w3-center">' . $warna[0]["Warna"] . '</td>';
+							} else {
+								echo '<td class="w3-center">' . $warna[0]["Warna"] . '-' . $warna[0]["NomorWarna"] . '</td>';
+							}
+							$barang[$i] = $r[$i];
 						} else {
-							echo '<td>' . date("Y-m-d",strtotime($r[$i])) . '</td>';
+							echo '<td class="w3-center">' . (isset($r[$i]) ? $r[$i] : '&nbsp;') . '</td>';
+							$barang[$i] = $r[$i];
 						}
 					}
+					self::$db->executeNonQuery("InsertStock", [$barang[3], $barang[4], "'" . $barang[0] . "'", $barang[1], $barang[2]]);
 					echo '</tr>';
 				}
 				echo '</table>';
+				echo '</div><br>';
 			} else {
 				echo SimpleXLSX::parseError();
 			}
+		} else {
+			//kiri
+			echo '
+			<div class="w3-half w3-padding w3-border w3-container" style="overflow-y:scroll; height:500px; ">
+			<h4 class=" w3-padding w3-center"><b>List Kode Sampel</b></h4>
+			<table border="1" class="w3-table-all w3-border w3-padding">
+				<th class="w3-center w3-yellow">Id Sampel</th>
+				<th class="w3-center w3-yellow">Jenis</th>
+				<th class="w3-center w3-yellow">Sampel</th>
+				<th class="w3-center w3-yellow">Warna</th> 
+				<th class="w3-center w3-yellow">Nomor Warna</th> ';
+			$result = self::$db->executeQuery("GetListDetailSampel", [""]);
+			$temp = 0;
+			for ($i = 0; $i < count($result); $i++) {
+				if ($temp != $result[$i]["Id_Sampel"]) {
+					echo '<tr>
+					<td class="w3-center">' . $result[$i]["Id_Sampel"] . '</td>
+					<td class="w3-center">' . $result[$i]["JenisKain"] . '</td>
+					<td class="w3-center">' . $result[$i]["Sampel"] . '</td>
+					<td class="w3-center">' . $result[$i]["Warna"] . '</td>
+					<td class="w3-center">' . $result[$i]["NomorWarna"] . '</td>
+					</tr>';
+					$temp = $result[$i]["Id_Sampel"];
+				} else {
+					echo '<tr>
+					<td class="w3-center" ></td>
+					<td class="w3-center" ></td>
+					<td class="w3-center" ></td>
+					<td class="w3-center">' . $result[$i]["Warna"] . '</td>
+					<td class="w3-center">' . $result[$i]["NomorWarna"] . '</td>
+					</tr>';
+				}
+			}
+			echo '</table>
+			</div>';
+
+			//kanan
+			echo '
+			<div class="w3-half w3-padding w3-border w3-container" style="overflow-y:scroll; height:500px">
+			<h4 class=" w3-padding w3-center"><b>List Kode Warna</b></h4>
+			<table border="1" class="w3-table-all w3-border">
+				<th class="w3-center w3-yellow">Id Warna</th>
+				<th class="w3-center w3-yellow">Warna</th>
+				<th class="w3-center w3-yellow">Nomor Warna</th> ';
+			$result = self::$db->executeQuery("GetListWarna", [""]);
+			for ($i = 0; $i < count($result); $i++) {
+				echo '<tr>
+				<td class="w3-center">' . $result[$i]["Id_Warna"] . '</td>
+				<td class="w3-center">' . $result[$i]["Nama"] . '</td>
+				<td class="w3-center">' . $result[$i]["NomorWarna"] . '</td>
+				</tr>';
+			}
+			echo '</table>
+			</div>';
+
+			echo '
+			<div class="w3-container">
+			<br>
+			<h4 class="w3-center w3-border-bottom w3-padding"><b>Insert Stock</b></h4>
+			<form method="POST" enctype="multipart/form-data" class="w3-center">
+			*.XLSX <input type="file" name="file"  />&nbsp;&nbsp;<input type="submit" value="Insert" />
+			</form>';
 		}
-		echo '
-		<h4 class="w3-center w3-border-bottom w3-padding"><b>Insert Stock</u></b></h4>
-		<form method="POST" enctype="multipart/form-data">
-		*.XLSX <input type="file" name="file"  />&nbsp;&nbsp;<input type="submit" value="Parse" />
-		</form>';
+		echo '</div>';
 	}
 }

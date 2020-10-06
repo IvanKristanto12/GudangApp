@@ -309,6 +309,7 @@ class Stock extends Controller implements ViewInterface
           <button class="tablink w3-bar-item w3-button" onclick="openCity(event, ' . "'JenisKain'" . ')">Jenis Kain</button>
           <button class="tablink w3-bar-item w3-button" onclick="openCity(event, ' . "'Penjual'" . ')">Penjual</button>
           <button class="tablink w3-bar-item w3-button" onclick="openCity(event, ' . "'Pembeli'" . ')">Pembeli</button>
+          <a class="tablink w3-bar-item w3-button" href="xlsx">Insert By Excel</a>
 
           </div>';
 
