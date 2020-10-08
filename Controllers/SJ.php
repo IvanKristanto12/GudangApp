@@ -57,7 +57,7 @@ class SJ extends Controller implements ViewInterface
         }
 
         self::FormSJ();
-        self::CreateFooter();
+        // self::CreateFooter();
         echo '</body>';
     }
 
@@ -86,7 +86,7 @@ class SJ extends Controller implements ViewInterface
 
         //kanan
         echo '
-            <div class="w3-half rightSide">
+            <div class="w3-half rightSide" style="overflow-x:scroll">
                 <table class="w3-table-all">
                     <tr class="w3-yellow w3-border">
                         <th class="w3-center">Pilih</th>

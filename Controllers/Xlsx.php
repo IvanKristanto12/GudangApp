@@ -132,7 +132,7 @@ class Xlsx extends Controller
 			for ($i = 0; $i < count($result); $i++) {
 				if ($temp != $result[$i]["Id_Sampel"]) {
 					echo '<tr>
-					<td class="w3-center">' . $result[$i]["Id_Sampel"] . '</td>
+					<td class="w3-center"><b>' . $result[$i]["Id_Sampel"] . '</b></td>
 					<td class="w3-center">' . $result[$i]["JenisKain"] . '</td>
 					<td class="w3-center">' . $result[$i]["Sampel"] . '</td>
 					<td class="w3-center">' . $result[$i]["Warna"] . '</td>
@@ -163,7 +163,7 @@ class Xlsx extends Controller
 			$result = self::$db->executeQuery("GetListWarna", [""]);
 			for ($i = 0; $i < count($result); $i++) {
 				echo '<tr>
-				<td class="w3-center">' . $result[$i]["Id_Warna"] . '</td>
+				<td class="w3-center"><b>' . $result[$i]["Id_Warna"] . '</b></td>
 				<td class="w3-center">' . $result[$i]["Nama"] . '</td>
 				<td class="w3-center">' . $result[$i]["NomorWarna"] . '</td>
 				</tr>';
@@ -176,9 +176,9 @@ class Xlsx extends Controller
 			<br>
 			<h4 class="w3-center w3-border-bottom w3-padding"><b>Insert Stock</b></h4>
 			<form method="POST" enctype="multipart/form-data" class="w3-center">
-			*.XLSX <input type="file" name="file"  />&nbsp;&nbsp;<input type="submit" value="Insert" />
+			*.XLSX <input id="inputXlsx" type="file" name="file" accept=".xlsx" class="w3-red" onchange="checkInput()" required/>&nbsp;&nbsp;<input type="submit" value="Insert" />
 			</form>';
 		}
-		echo '</div>';
+		echo '<script src="Assets/script/xlsx.js"></script></div>';
 	}
 }

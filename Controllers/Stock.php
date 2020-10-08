@@ -50,7 +50,7 @@ class Stock extends Controller implements ViewInterface
         }
         // self::listStock();
         self::listStockExcel();
-        self::CreateFooter();
+        // self::CreateFooter();
         echo '</body>';
     }
 
@@ -74,17 +74,20 @@ class Stock extends Controller implements ViewInterface
     private static function listStockExcel()
     {
         echo '
+        <table class="w3-table w3-border" >
+            
+        </table>
+        <div class="w3-border" style="width:100%; height:75%; overflow-y:scroll">
         <table class="w3-table w3-border">
-            <tr class="w3-text-black">
-                <th class="w3-center w3-border column1">NAMA BARANG</th>
+        <tr class="w3-text-black w3-yellow">
+                <th class="w3-center w3-border column1" >NAMA BARANG</th>
                 <th class="w3-center w3-border column2" colspan="2">WARNA</th>
                 <th class="w3-center w3-border column3">PCS</th>
                 <th class="w3-center w3-border column4">METER</th>
                 <th class="w3-center w3-border column5" colspan="2">TOTAL</th>
             </tr>
-        </table>
-        <div class="w3-border" style="width:100%; height:71%; overflow-y:scroll">
-        <table class="w3-table w3-border">';
+            </tr>
+            </tr>';
         $result = self::$db->executeQuery("GetStock", [""]);
         $nama = "";
         $sumPcs = 0;

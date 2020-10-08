@@ -46,7 +46,7 @@ class PO extends Controller implements ViewInterface
         self::CreateHeader();
         self::CreateNavigationBar();
         self::FormPO();
-        self::CreateFooter();
+        // self::CreateFooter();
         echo '</body>';
     }
 
@@ -129,7 +129,7 @@ class PO extends Controller implements ViewInterface
         //kanan
         echo '
             <div class="w3-half rightSide">
-                <table id="listKainTable" class="w3-table-all">
+                <table id="listKainTable" class="w3-table-all" style="overflow-x:scroll">
                     <tr class="w3-yellow w3-border">
                         <th class="w3-center">Pilih</th>
                         <th class="w3-center">Sampel</th>

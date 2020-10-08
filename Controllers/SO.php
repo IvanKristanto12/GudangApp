@@ -44,7 +44,7 @@ class SO extends Controller implements ViewInterface
         self::CreateHeader();
         self::CreateNavigationBar();
         self::FormSO();
-        self::CreateFooter();
+        // self::CreateFooter();
         echo '</body>';
     }
 

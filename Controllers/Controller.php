@@ -37,9 +37,9 @@ class Controller extends Database
 
     public static function CreateFooter()
     {
-        echo '
-        <div class="w3-container w3-theme-d2  w3-display-bottommiddle" style=" width:100%; height:2%";>
-        </div>';
+        // echo '
+        // <div class="w3-container w3-theme-d2  w3-display-bottommiddle" style=" width:100%; height:2%";>
+        // </div>';
     }
 
     protected static function CreateHTML($head,$body){

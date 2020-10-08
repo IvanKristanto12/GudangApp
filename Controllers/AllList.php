@@ -69,7 +69,7 @@ class AllList extends Controller implements ViewInterface
             unset($_SESSION["poDone"]);
         }
         echo '
-        <form action="AllListHandler" method="GET">
+        <form action="AllListHandler" method="GET" style="overflow-x:scroll">
         <table class="w3-table-all">
             <tr class="w3-yellow">
                 <th class="w3-center">No</th>
