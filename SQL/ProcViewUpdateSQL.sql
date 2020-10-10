@@ -627,10 +627,11 @@ GO
 CREATE OR ALTER PROC GetListAll
 AS
 
-SELECT PurchaseOrder.No_PO, PurchaseOrder.Tanggal as 'Tanggal PO', No_SJ, SuratJalan.Tanggal as 'Tanggal SJ', Kode
+SELECT PurchaseOrder.No_PO, PurchaseOrder.Tanggal as 'Tanggal PO', No_SJ, SuratJalan.Tanggal as 'Tanggal SJ', Kode, SuratOrder.No_SO, SuratOrder.Tanggal as 'Tanggal SO'
 FROM PurchaseOrder
 	JOIN SuratJalan on SuratJalan.No_PO = PurchaseOrder.No_PO
 	JOIN Penjual on Penjual.Id_Penjual = PurchaseOrder.Id_Penjual
+	JOIN SuratOrder on SuratOrder.No_SO = PurchaseOrder.No_SO
 GO
 
 exec GetListAll
@@ -715,7 +716,8 @@ GO
 USE GordenDB
 GO
 CREATE OR ALTER PROC GetDetailSO
-	@inputNoSO INTEGER
+	@inputNoSO INTEGER,
+	@inputStatus INTEGER
 AS
 IF(@inputNoSO = 0)
 BEGIN
@@ -723,7 +725,7 @@ BEGIN
 	FROM SuratOrder
 		JOIN Penjual ON Penjual.Id_Penjual = SuratOrder.Id_Penjual
 		JOIN Pembeli ON Pembeli.Id_Pembeli = SuratOrder.Id_Pembeli
-	WHERE Status = 0
+	WHERE Status = @inputStatus
 END
 ELSE 
 BEGIN
@@ -734,11 +736,11 @@ BEGIN
 		JOIN Pembeli ON Pembeli.Id_Pembeli = SuratOrder.Id_Pembeli
 		JOIN Sampel ON Sampel.Id_Sampel = ListSampelSO.Id_Sampel
 		JOIN Warna ON Warna.Id_Warna = ListSampelSO.Id_Warna
-	WHERE SuratOrder.No_SO = @inputNoSO AND [Status] = 0
+	WHERE SuratOrder.No_SO = @inputNoSO AND [Status] = @inputStatus
 END
 GO
 
-exec GetDetailSO 4
+exec GetDetailSO 0 ,0
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 29*/
 --Insert HapusSO

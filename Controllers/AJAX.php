@@ -67,7 +67,7 @@ class AJAX extends Controller
                     <th class="w3-center w3-yellow">Barang</th>
                     <th class="w3-center w3-yellow">Total Pcs</th>
                 </tr>';
-        $result = self::$db->executeQuery("GetDetailSO", [$NoSO]);
+        $result = self::$db->executeQuery("GetDetailSO", [$NoSO,0]);
         for ($i = 0; $i < count($result); $i++) {
             if ($result[$i]["NomorWarna"] == null) {
                 $respondText .=

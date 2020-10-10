@@ -89,6 +89,9 @@ if (isset($_COOKIE["userpermission"])) {
         Route::set('SOPDF', function () {
             Controller::SubmitForm("SOPDF");
         });
+
+        Route::set('StockPDF', function () {
+            Controller::SubmitForm("StockPDF");
+        });
     }
 }
-

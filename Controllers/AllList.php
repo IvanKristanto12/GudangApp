@@ -53,10 +53,18 @@ class AllList extends Controller implements ViewInterface
     private static function listPOSJ()
     {
         session_start();
+        if (isset($_SESSION["soDone"])) {
+            if ($_SESSION["soDone"] == true) {
+                echo "<script>createSOPDF = true</script>";
+                echo '<div class="w3-text-black w3-green w3-center w3-border w3-large"><b> CETAK SO DONE </b></div>';
+            }
+            unset($_SESSION["soDone"]);
+        }
+
         if (isset($_SESSION["sjDone"])) {
             if ($_SESSION["sjDone"] == true) {
                 echo "<script>createSJPDF = true</script>";
-                echo '<div class="w3-text-black w3-green w3-center w3-border w3-large"><b> BUAT SJ DONE </b></div>';
+                echo '<div class="w3-text-black w3-green w3-center w3-border w3-large"><b> CETAK SJ DONE </b></div>';
             }
             unset($_SESSION["sjDone"]);
         }
@@ -73,10 +81,13 @@ class AllList extends Controller implements ViewInterface
         <table class="w3-table-all">
             <tr class="w3-yellow">
                 <th class="w3-center">No</th>
+                <th class="w3-center">Kode SO</th>
+                <th class="w3-center">Tanggal SO</th>
                 <th class="w3-center">Kode PO</th>
                 <th class="w3-center">Tanggal PO</th>
                 <th class="w3-center">Kode SJ</th>
                 <th class="w3-center">Tanggal SJ</th>
+                <th class="w3-center">Cetak SO</th>
                 <th class="w3-center">Cetak PO</th>
                 <th class="w3-center">Cetak SJ</th>
             </tr>';
@@ -84,15 +95,20 @@ class AllList extends Controller implements ViewInterface
         $result = self::$db->executeQuery("GetListAll", [""]);
 
         for ($i = 0; $i < count($result); $i++) {
+            $noSO = $result[$i]["No_SO"] . "/SO";
             $noPO = substr(($result[$i]["No_PO"] * 1 + 100000) . '', 1, 6) . '/PO/' . (substr($result[$i]["Tanggal PO"] . '', 0, 4) * 1 - 2000) . "/" . substr($result[$i]["Tanggal PO"], 5, 2) . "/" . $result[$i]["Kode"];
             $noSJ = substr(($result[$i]["No_PO"] * 1 + 100000) . '', 1, 6) . '/SJ/' . (substr($result[$i]["Tanggal PO"] . '', 0, 4) * 1 - 2000) . "/" . substr($result[$i]["Tanggal PO"], 5, 2) . "/" . $result[$i]["Kode"];
+
             echo '
             <tr>
             <td class="w3-center">' . ($i + 1) . '</td>
+            <td class="w3-center">' . $noSO . '</td>
+            <td class="w3-center">' . $result[$i]["Tanggal SO"] . '</td>
             <td class="w3-center">' . $noPO . '</td>
             <td class="w3-center">' . $result[$i]["Tanggal PO"] . '</td>
             <td class="w3-center">' . $noSJ . '</td>
             <td class="w3-center">' . $result[$i]["Tanggal SJ"] . '</td>
+            <th class="w3-center"><button class="w3-button w3-green w3-text-black" name="CetakSO" value=' . $result[$i]["No_SO"] . '>Cetak SO</button></th>
             <th class="w3-center"><button class="w3-button w3-green w3-text-black" name="CetakPO" value=' . $result[$i]["No_PO"] . '>Cetak PO</button></th>
             <th class="w3-center"><button class="w3-button w3-green w3-text-black" name="CetakSJ" value=' . $result[$i]["No_SJ"] . '>Cetak SJ</button></th>
             </tr>';

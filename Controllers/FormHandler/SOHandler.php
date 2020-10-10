@@ -14,11 +14,11 @@ if (isset($_POST["submitCreateSO"])) {
         $temp = explode(",", $check);
         self::$db->executeNonQuery("InsertListSampelSO", [$noSO, $temp[0], $temp[1], $_POST["inputPcs" . $temp[0] . $temp[1]]]);
     }
-    $_SESSION["SOPDF"] = self::$db->executeQuery("GetDetailSO", [$noSO]);
+    $_SESSION["SOPDF"] = self::$db->executeQuery("GetDetailSO", [$noSO,0]);
 }
 if (isset($_GET["CetakSO"])) {
     $noSO = $_GET["CetakSO"];
-    $_SESSION["SOPDF"] = self::$db->executeQuery("GetDetailSO", [$noSO]);
+    $_SESSION["SOPDF"] = self::$db->executeQuery("GetDetailSO", [$noSO,0]);
 }
 if (isset($_GET["HapusSO"])) {
     $noSO = $_GET["HapusSO"];

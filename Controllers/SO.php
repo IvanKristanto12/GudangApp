@@ -168,7 +168,7 @@ class SO extends Controller implements ViewInterface
             <th class="w3-center">Hapus</th>
         </tr>';
 
-        $result = self::$db->executeQuery("GetDetailSO", [0]);
+        $result = self::$db->executeQuery("GetDetailSO", [0,0]);
         for ($i = 0; $i < count($result); $i++) {
             echo '<tr>
                 <td class="w3-center">' . $result[$i]["No_SO"] . '</td>

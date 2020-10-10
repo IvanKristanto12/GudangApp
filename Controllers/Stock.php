@@ -35,12 +35,13 @@ class Stock extends Controller implements ViewInterface
         <link rel="stylesheet" href="Assets/style/w3-theme-blue-grey.css">
         <link rel="icon" href="Assets/image/title-icon.png">
         <title>' . $title . '</title>
-        <script src="Assets/script/tambahmodalHead.js"></script>
+        <script src="Assets/script/stockHead.js"></script>
         </head>';
     }
 
     public static function CreateBody()
     {
+        session_start();
         echo '<body class="">';
         self::CreateHeader();
         self::CreateNavigationBar();
@@ -48,9 +49,15 @@ class Stock extends Controller implements ViewInterface
         if ($_COOKIE["userpermission"] == 0) {
             self::modalTambah();
         }
+        self::CetakStock();
         // self::listStock();
         self::listStockExcel();
         // self::CreateFooter();
+
+        if (isset($_SESSION["StockPDF"])) {
+            echo '<script>createStockPDF = true;</script>';
+        }
+        echo '<script src="Assets/script/stock.js"></script>';
         echo '</body>';
     }
 
@@ -61,14 +68,11 @@ class Stock extends Controller implements ViewInterface
 
     private static function doneText()
     {
-        session_start();
         if (isset($_SESSION["done"])) {
             if ($_SESSION["done"] == true) {
                 echo '<div class="w3-text-black w3-green w3-center w3-border w3-large"><b> INSERT DONE </b></div>';
             }
         }
-        session_unset();
-        session_destroy();
     }
 
     private static function listStockExcel()
@@ -290,6 +294,7 @@ class Stock extends Controller implements ViewInterface
                 </td>
                 </tr>';
         }
+
         echo '<script src="Assets/script/accordion.js"></script>';
         echo '</table>';
     }
@@ -330,7 +335,6 @@ class Stock extends Controller implements ViewInterface
        </div>
        
        </div>';
-        echo '<script src="Assets/script/tambahmodal.js"></script>';
     }
 
     private static function tabTambahStock()
@@ -381,7 +385,7 @@ class Stock extends Controller implements ViewInterface
             $JenisKainOption .= '"<option value="' . $result[$i]["Id_JenisKain"] . '">' . $result[$i]["Nama"] . '</option>"';
         }
         echo $JenisKainOption . '</select>';
-        
+
         echo '
         <h4><b>Pilih Warna</b></h4>
         <table class="w3-table-all"> 
@@ -398,7 +402,7 @@ class Stock extends Controller implements ViewInterface
             <tr>
                 <td><input class="w3-check w3-border" type="checkbox" name="warna[' . $i . ']" value="' . $result[$i]["Id_Warna"] . '" /></td>
                 <td><label>' . $result[$i]["Nama"] . '</label></td>
-                <td>'.$result[$i]["NomorWarna"].'</td>
+                <td>' . $result[$i]["NomorWarna"] . '</td>
             </tr>';
         }
         echo $checkboxWarna;
@@ -501,5 +505,12 @@ class Stock extends Controller implements ViewInterface
         <input class="w3-button w3-border w3-center w3-large w3-block w3-margin-top w3-green w3-text-black" value="submit" type="submit" name="submitTambahJenisKain" />
         </form>
        </div>';
+    }
+
+    private static function CetakStock()
+    {
+        echo '<form action="StockFormHandler" method="GET" style="display:inline">
+        <input type="submit" name="CetakStock" class="w3-button w3-blue w3-border w3-text-black w3-large" value="Cetak Stock"x/>
+        </form>';
     }
 }

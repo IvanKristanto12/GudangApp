@@ -78,7 +78,7 @@ class PO extends Controller implements ViewInterface
         echo '<h4><b>Nomor SO</b></h4>
         <select class="w3-select w3-border w3-padding-small" name="inputNoSO" required onchange="showListKain(this.value)">
         <option value="" disabled selected>Pilih No SO</option>';
-        $result = self::$db->executeQuery("GetDetailSO", [0]);
+        $result = self::$db->executeQuery("GetDetailSO", [0,0]);
         for ($i = 0; $i < count($result); $i++) {
             echo '<option value="' . $result[$i]["No_SO"] . '">' . $result[$i]["No_SO"] . "/" . $result[$i]["KodePenjual"] . "/" . $result[$i]["Pembeli"] . "-" . $result[$i]["AlamatPembeli"] . '</option>';
         }

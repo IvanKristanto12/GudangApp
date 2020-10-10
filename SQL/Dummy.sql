@@ -268,7 +268,7 @@ VALUES
 INSERT INTO Sampel
     (Nama, Id_JenisKain)
 VALUES
-    ('Anjing', 5)
+    ('Kerbau', 5)
 
 INSERT INTO SampelWarna
     (Id_Sampel,Id_Warna)
@@ -432,4 +432,4 @@ VALUES('2020-07-31', 3, '')
 
 GO
 
-exec Dummy
+-- exec Dummy

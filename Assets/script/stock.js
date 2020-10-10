@@ -13,3 +13,7 @@ function openCity(evt, cityName) {
   document.getElementById(cityName).style.display = "block";
   evt.currentTarget.classList.add("w3-grey");
 }
+
+if (createStockPDF) {
+  window.open('StockPDF', '_blank');
+}

@@ -13,3 +13,5 @@ function showWarna(idSampel) {
         xmlhttp.send();
     }
 }
+
+var createStockPDF = false;
