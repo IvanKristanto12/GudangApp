@@ -565,29 +565,52 @@ exec InsertPembeliBaru 'Buyer5' , 'Gunung'
 USE GordenDB
 GO
 CREATE OR ALTER PROC GetStock
+	@inputIdSampel INTEGER
 AS
 DECLARE @a TABLE (Sampel VARCHAR(50),
 	Warna VARCHAR(50),
 	NomorWarna INT,
 	TotalPcs INT,
 	TotalMeter FLOAT)
-INSERT INTO @a
-SELECT Sampel.Nama, Warna.Nama, Warna.NomorWarna, COUNT(Kain.Id_Kain) as 'TotalPcs' , SUM(Kain.Meter) as 'TotalMeter'
-FROM Kain
-	JOIN KainSampelWarna on Kain.Id_Kain = KainSampelWarna.Id_Kain
-	JOIN Sampel on Sampel.Id_Sampel = KainSampelWarna.Id_Sampel
-	JOIN Warna on Warna.Id_Warna = KainSampelWarna.Id_Warna
-WHERE Status = 1
-GROUP BY Sampel.Nama, Warna.Nama , Warna.NomorWarna
-ORDER BY Sampel.Nama, Warna.Nama , Warna.NomorWarna
 
-SELECT ListSampelWarna.Id_Sampel, ListSampelWarna.Sampel, ListSampelWarna.Id_Warna, ListSampelWarna.Warna, a.NomorWarna, a.TotalPcs, a.TotalMeter
-FROM @a as a
-	RIGHT OUTER JOIN ListSampelWarna ON ListSampelWarna.Sampel = a.Sampel AND ListSampelWarna.Warna = a.Warna
-ORDER BY ListSampelWarna.Sampel , ListSampelWarna.Warna
+IF @inputIdSampel = 0 
+BEGIN
+	INSERT INTO @a
+	SELECT Sampel.Nama, Warna.Nama, Warna.NomorWarna, COUNT(Kain.Id_Kain) as 'TotalPcs' , SUM(Kain.Meter) as 'TotalMeter'
+	FROM Kain
+		JOIN KainSampelWarna on Kain.Id_Kain = KainSampelWarna.Id_Kain
+		JOIN Sampel on Sampel.Id_Sampel = KainSampelWarna.Id_Sampel
+		JOIN Warna on Warna.Id_Warna = KainSampelWarna.Id_Warna
+	WHERE Status = 1
+	GROUP BY Sampel.Nama, Warna.Nama , Warna.NomorWarna
+	ORDER BY Sampel.Nama, Warna.Nama , Warna.NomorWarna
+
+	SELECT ListSampelWarna.Id_Sampel, ListSampelWarna.Sampel, ListSampelWarna.Id_Warna, ListSampelWarna.Warna, a.NomorWarna, a.TotalPcs, a.TotalMeter
+	FROM @a as a
+		RIGHT OUTER JOIN ListSampelWarna ON ListSampelWarna.Sampel = a.Sampel AND ListSampelWarna.Warna = a.Warna
+	ORDER BY ListSampelWarna.Sampel , ListSampelWarna.Warna
+END
+ELSE
+BEGIN
+	INSERT INTO @a
+	SELECT Sampel.Nama, Warna.Nama, Warna.NomorWarna, COUNT(Kain.Id_Kain) as 'TotalPcs' , SUM(Kain.Meter) as 'TotalMeter'
+	FROM Kain
+		JOIN KainSampelWarna on Kain.Id_Kain = KainSampelWarna.Id_Kain
+		JOIN Sampel on Sampel.Id_Sampel = KainSampelWarna.Id_Sampel
+		JOIN Warna on Warna.Id_Warna = KainSampelWarna.Id_Warna
+	WHERE Status = 1 AND Sampel.Id_Sampel = @inputIdSampel
+	GROUP BY Sampel.Nama, Warna.Nama , Warna.NomorWarna
+	ORDER BY Sampel.Nama, Warna.Nama , Warna.NomorWarna
+
+	SELECT ListSampelWarna.Id_Sampel, ListSampelWarna.Sampel, ListSampelWarna.Id_Warna, ListSampelWarna.Warna, a.NomorWarna, a.TotalPcs, a.TotalMeter
+	FROM @a as a
+		RIGHT OUTER JOIN ListSampelWarna ON ListSampelWarna.Sampel = a.Sampel AND ListSampelWarna.Warna = a.Warna
+	WHERE ListSampelWarna.Id_Sampel = @inputIdSampel
+	ORDER BY ListSampelWarna.Sampel , ListSampelWarna.Warna
+END
 GO
 
-exec GetStock
+exec GetStock 1
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 22*/
 --insert Jenis Kain Baru
@@ -804,7 +827,7 @@ exec GetListDetailSampel
 USE GordenDB
 GO
 CREATE OR ALTER PROC GetSampelById
-@inputId INTEGER
+	@inputId INTEGER
 AS
 SELECT Nama as 'Sampel'
 FROM Sampel
@@ -820,7 +843,7 @@ exec GetSampelById 1
 USE GordenDB
 GO
 CREATE OR ALTER PROC GetWarnaById
-@inputId INTEGER
+	@inputId INTEGER
 AS
 SELECT Nama as 'Warna' , NomorWarna as 'NomorWarna'
 FROM Warna

@@ -100,7 +100,7 @@ class SO extends Controller implements ViewInterface
                         <th class="w3-center">Total Pcs Stock</th>
                     </tr>';
 
-        $result = self::$db->executeQuery("GetStock", [""]);
+        $result = self::$db->executeQuery("GetStock", [0]);
         for ($i = 0; $i < count($result); $i++) {
             if ($result[$i]["TotalPcs"] != null) {
                 echo '

@@ -94,7 +94,7 @@ class Stock extends Controller implements ViewInterface
             </tr>
             </tr>
             </tr>';
-        $result = self::$db->executeQuery("GetStock", [""]);
+        $result = self::$db->executeQuery("GetStock", [0]);
         $nama = "";
         $sumPcs = 0;
         $sumMeter = 0;
