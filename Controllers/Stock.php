@@ -48,6 +48,8 @@ class Stock extends Controller implements ViewInterface
         self::doneText();
         if ($_COOKIE["userpermission"] == 0) {
             self::modalTambah();
+            echo '<script src="Assets/script/modalTambah.js"></script>';
+
         }
         self::CetakStock();
         // self::listStock();

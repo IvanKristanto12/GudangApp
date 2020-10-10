@@ -93,5 +93,14 @@ if (isset($_COOKIE["userpermission"])) {
         Route::set('StockPDF', function () {
             Controller::SubmitForm("StockPDF");
         });
+    } else if ($_COOKIE["userpermission"] == 1) {
+        Route::set('StockFormHandler', function () {
+            Controller::SubmitForm("StockHandler");
+            header("Location: stock");
+        });
+
+        Route::set('StockPDF', function () {
+            Controller::SubmitForm("StockPDF");
+        });
     }
 }
