@@ -46,18 +46,19 @@ GO
 exec GetListKain 1
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 2*/
---List PO 
+--List All PO for Retur
 --@param - 
 --@return table 
 USE GordenDB
 GO
-CREATE OR ALTER PROC GetListPO
+CREATE OR ALTER PROC GetListPOForRetur
 AS
-SELECT *
+SELECT DISTINCT ListPO.No_PO, ListPO.Tanggal, KodePenjual
 FROM ListPO
+	JOIN SuratJalan ON SuratJalan.No_PO = ListPO.No_PO
 GO
 
-exec GetListPO
+exec GetListPOForRetur
 
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 3*/
@@ -411,7 +412,7 @@ END
 END
 GO
 
-exec GetDetailPO 0
+exec GetDetailPO 1
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 16*/
 --list PO
@@ -852,6 +853,61 @@ GO
 
 exec GetWarnaById 1
 --------------------------------------------------------------------------------------------------
+/*Procedure No. 34*/
+-- List kain yang dapat di Retur
+--@param noPO
+--@return listKain
+USE GordenDB
+GO
+CREATE OR ALTER PROC GetDetailPOForRetur
+	@inputNoPO INT
+AS
+SELECT *
+FROM ListPO
+	JOIN ListKainPO on ListKainPO.Id_Kain = ListPO.Id_Kain
+WHERE ListPO.No_PO = @inputNoPO AND ListKainPO.StatusRetur = 1
+ORDER BY Sampel, Warna
+GO
+
+exec GetDetailPOForRetur 1
+--------------------------------------------------------------------------------------------------
+/*Procedure No. 35*/
+-- Warna
+--@param -
+--@return Warna
+USE GordenDB
+GO
+CREATE OR ALTER PROC createRetur
+	@inputTanggal DATE,
+	@inputNoPO INTEGER,
+	@inputKeterangan VARCHAR(500),
+	@inputKain VARCHAR(8000)
+AS
+INSERT Retur
+	(Tanggal,No_PO,Keterangan)
+VALUES
+	(@inputTanggal, @inputNoPO, @inputKeterangan)
+
+DECLARE @i INT, @idxKain INT, @temp VARCHAR(8000)
+SET @i = 1
+SET @temp = @inputKain
+
+WHILE LEN(@temp) != 0
+	BEGIN
+	SET @i = CHARINDEX(',',@temp)
+	SET @idxKain = CAST(SUBSTRING(@temp,1, @i-1) as INT)
+
+	UPDATE ListKainPO SET StatusRetur = 0 WHERE Id_Kain = @idxKain AND No_PO = @inputNoPO
+	UPDATE Kain SET Status = 1 , TanggalKeluar = NULL WHERE Id_Kain = @idxKain
+
+	SET @i = @i+1
+	SET @temp = SUBSTRING(@temp ,@i,LEN(@temp))
+END
+GO
+SELECT * FROM ListKainPO
+SELECT * FROM Retur
+-- exec createRetur 
+--------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 /*****List View*****/
 SELECT
@@ -886,12 +942,13 @@ GO
 CREATE OR ALTER VIEW ListPO
 AS
 	SELECT PurchaseOrder.No_PO, PurchaseOrder.Tanggal, Penjual.Kode as 'KodePenjual', Penjual.Nama as 'Penjual', Pembeli.Nama as 'Pembeli', Pembeli.Alamat, PurchaseOrder.Total_Pcs ,
-		PurchaseOrder.Total_Meter, NomorKarung, Meter, ListStockKain.Sampel, ListStockKain.Warna , ListStockKain.[Jenis Kain] , KeteranganPO
+		PurchaseOrder.Total_Meter, ListKainPO.Id_Kain, NomorKarung, Meter, ListStockKain.Sampel, ListStockKain.Warna , ListStockKain.[Jenis Kain] , KeteranganPO
 	FROM PurchaseOrder
 		JOIN Penjual ON PurchaseOrder.Id_Penjual = Penjual.Id_Penjual
 		JOIN Pembeli ON PurchaseOrder.Id_Pembeli = Pembeli.Id_Pembeli
 		JOIN ListKainPO ON PurchaseOrder.No_PO = ListKainPO.No_PO
 		JOIN ListStockKain ON ListKainPO.Id_Kain = ListStockKain.Id_Kain
+	WHERE ListKainPO.StatusRetur = 1
 GO
 
 SELECT *
@@ -970,7 +1027,10 @@ SELECT *
 FROM SuratOrder
 SELECT *
 FROM ListSampelSO
+SELECT *
+FROM Retur
 
+--------------------------------------------------------------------------------------------------
 USE GordenDB
 GO
 CREATE OR ALTER PROC resetDatabase
@@ -981,13 +1041,14 @@ DELETE FROM SampelWarna
 DELETE FROM KainSampelWarna
 DELETE FROM SuratJalan
 DELETE FROM ListSampelSO
+DELETE FROM Retur
 DELETE FROM PurchaseOrder
 DELETE FROM SuratOrder
+DELETE FROM Pembeli
+DELETE FROM Penjual
 DELETE FROM Users
 DELETE FROM Kain
 DELETE FROM Warna
-DELETE FROM Pembeli
-DELETE FROM Penjual
 DELETE FROM Sampel
 DELETE FROM JenisKain
 
@@ -1002,10 +1063,34 @@ DBCC CHECKIDENT(Sampel,RESEED,0)
 DBCC CHECKIDENT(SuratOrder,RESEED,0)
 DBCC CHECKIDENT(PurchaseOrder,RESEED,0)
 DBCC CHECKIDENT(SuratJalan,RESEED,0)
+DBCC CHECKIDENT(Retur,RESEED,0)
 GO
 
 exec resetDatabase
+--------------------------------------------------------------------------------------------------
+USE GordenDB
+GO
+CREATE OR ALTER PROC dropAllTable
+AS
+DROP TABLE ListKainPO
+DROP TABLE SampelWarna
+DROP TABLE KainSampelWarna
+DROP TABLE SuratJalan
+DROP TABLE ListSampelSO
+DROP TABLE Retur
+DROP TABLE PurchaseOrder
+DROP TABLE SuratOrder
+DROP TABLE Pembeli
+DROP TABLE Penjual
+DROP TABLE Users
+DROP TABLE Kain
+DROP TABLE Warna
+DROP TABLE Sampel
+DROP TABLE JenisKain
+GO
 
+exec dropAllTable
+--------------------------------------------------------------------------------------------------
 
 
 

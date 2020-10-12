@@ -43,6 +43,10 @@ if (isset($_COOKIE["userpermission"])) {
             Xlsx::CreateView('Xlsx');
         });
 
+        Route::set('retur', function () {
+            PO::CreateView('Retur');
+        });
+
         //Function
         Route::set('getListWarna', function () {
             AJAX::getListWarna();
@@ -50,6 +54,10 @@ if (isset($_COOKIE["userpermission"])) {
 
         Route::set('getBySO', function () {
             AJAX::getBySO();
+        });
+
+        Route::set('getByPO', function () {
+            AJAX::getByPO();
         });
 
         //FormHandler
@@ -76,6 +84,11 @@ if (isset($_COOKIE["userpermission"])) {
         Route::set('AllListHandler', function () {
             Controller::SubmitForm("AllListHandler");
             header("Location: alllist");
+        });
+
+        Route::set('ReturHandler', function () {
+            Controller::SubmitForm("ReturHandler");
+            header("Location: retur");
         });
 
         Route::set('POPDF', function () {

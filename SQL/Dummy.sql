@@ -2,7 +2,7 @@
 /*Query Data Dummy*/
 USE GordenDB
 GO
-CREATE OR ALTER PROC Dummy 
+CREATE OR ALTER PROC Dummy
 AS
 
 INSERT INTO Users
@@ -26,7 +26,7 @@ VALUES
 INSERT INTO Kain
     (NomorKarung,Meter,TanggalMasuk,TanggalKeluar,Status)
 VALUES
-    (3, 150, '2020-07-29', '2020-07-30', 0)
+    (3, 150, '2020-07-29', null, 1)
 INSERT INTO Kain
     (NomorKarung,Meter,TanggalMasuk,TanggalKeluar,Status)
 VALUES
@@ -410,7 +410,7 @@ VALUES
 INSERT INTO ListKainPO
     (No_PO, Id_Kain, StatusRetur)
 VALUES
-    (1, 3, 1)
+    (1, 3, 0)
 INSERT INTO ListKainPO
     (No_PO, Id_Kain, StatusRetur)
 VALUES
@@ -430,6 +430,10 @@ INSERT INTO SuratJalan
     (Tanggal,No_PO,Keterangan)
 VALUES('2020-07-31', 3, '')
 
+INSERT INTO Retur
+    (Tanggal,No_PO,Keterangan)
+VALUES
+    ('2020-08-05', 1, 'Salah warna')
 GO
 
 -- exec Dummy

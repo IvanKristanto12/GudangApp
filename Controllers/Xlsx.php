@@ -39,7 +39,9 @@ class Xlsx extends Controller
             <a href="so" class="w3-bar-item w3-button">SO</a>
             <a href="po" class="w3-bar-item w3-button">PO</a>
             <a href="sj" class="w3-bar-item w3-button">SJ</a>
-            <a href="alllist" class="w3-bar-item w3-button ">AllList</a>
+			<a href="alllist" class="w3-bar-item w3-button ">AllList</a>
+			<a href="retur" class="w3-bar-item w3-button ">Retur</a>
+
 
             </div>';
 	}

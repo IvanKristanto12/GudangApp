@@ -1,6 +1,10 @@
 -- First Installation
 exec NewDatabase
 
+-- Drop all Table
+
+exec dropAllTable
+
 -- Reset Data
 exec resetDatabase
 
