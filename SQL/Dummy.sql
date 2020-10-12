@@ -406,19 +406,19 @@ VALUES
 INSERT INTO ListKainPO
     (No_PO, Id_Kain, StatusRetur)
 VALUES
-    (1, 1, 1)
+    (1, 1, 0)
 INSERT INTO ListKainPO
     (No_PO, Id_Kain, StatusRetur)
 VALUES
-    (1, 3, 0)
+    (1, 3, 1)
 INSERT INTO ListKainPO
     (No_PO, Id_Kain, StatusRetur)
 VALUES
-    (2, 6, 1)
+    (2, 6, 0)
 INSERT INTO ListKainPO
     (No_PO, Id_Kain, StatusRetur)
 VALUES
-    (3, 8, 1)
+    (3, 8, 0)
 
 INSERT INTO SuratJalan
     (Tanggal,No_PO,Keterangan)
@@ -431,9 +431,9 @@ INSERT INTO SuratJalan
 VALUES('2020-07-31', 3, '')
 
 INSERT INTO Retur
-    (Tanggal,No_PO,Keterangan)
+    (Tanggal,No_PO,Keterangan,Total_Pcs,Total_Meter)
 VALUES
-    ('2020-08-05', 1, 'Salah warna')
+    ('2020-08-05', 1, 'Salah warna',1,150)
 GO
 
 -- exec Dummy

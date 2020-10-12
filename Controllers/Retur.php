@@ -83,7 +83,6 @@ class Retur extends Controller implements ViewInterface
             echo '<option value="' . $result[$i]["No_PO"] . '">' . $noPO . '</option>';
         }
 
-
         echo '
         </select>
         <br>

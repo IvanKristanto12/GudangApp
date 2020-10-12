@@ -17,5 +17,5 @@ function setTotal() {
 }
 
 if (createPDF) {
-    window.open('POPDF', '_blank');
+    window.open('ReturPDF', '_blank');
 }

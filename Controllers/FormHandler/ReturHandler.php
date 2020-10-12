@@ -6,9 +6,9 @@ if (isset($_GET["submitCreateRetur"])) {
     $inputKeterangan = $_GET["inputKeterangan"];
     $kain = $_GET["kain"];
 
-    self::$db->executeNonQuery("createRetur", ["'" . $inputTanggalRetur . "'", $inputNoPO, "'" . $inputKeterangan . "'", "'" . $kain . "'"]);
+    $noRetur = self::$db->executeQuery("createRetur", ["'" . $inputTanggalRetur . "'", $inputNoPO, "'" . $inputKeterangan . "'", "'" . $kain . "'"]);
 
-    // $result = self::$db->executeQuery("GetDetailPO",["0"]);
-    // $_SESSION["POPDF"] = $result;
-    // $_SESSION["po"] = true;
+    $result = self::$db->executeQuery("GetDetailRetur",[$noRetur[0]["No_Retur"]]);
+    $_SESSION["ReturPDF"] = $result;
+    $_SESSION["retur"] = true;
 }

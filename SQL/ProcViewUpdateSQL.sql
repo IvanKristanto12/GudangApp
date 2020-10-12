@@ -56,6 +56,9 @@ AS
 SELECT DISTINCT ListPO.No_PO, ListPO.Tanggal, KodePenjual
 FROM ListPO
 	JOIN SuratJalan ON SuratJalan.No_PO = ListPO.No_PO
+	JOIN ListKainPO ON ListKainPO.No_PO = ListPO.No_PO
+WHERE StatusRetur = 0
+ORDER BY ListPO.No_PO
 GO
 
 exec GetListPOForRetur
@@ -205,7 +208,7 @@ WHILE LEN(@temp) != 0
 	INSERT INTO ListKainPO
 		(No_PO,Id_Kain,StatusRetur)
 	VALUES
-		(@noPO, @idxKain, 1)
+		(@noPO, @idxKain, 0)
 	UPDATE Kain SET Status = 0 , TanggalKeluar = CAST(@inputTanggal as DATE) WHERE Id_Kain = @idxKain
 
 	SET @totalPcs = @totalPcs + 1
@@ -862,19 +865,19 @@ GO
 CREATE OR ALTER PROC GetDetailPOForRetur
 	@inputNoPO INT
 AS
-SELECT *
+SELECT DISTINCT *
 FROM ListPO
 	JOIN ListKainPO on ListKainPO.Id_Kain = ListPO.Id_Kain
-WHERE ListPO.No_PO = @inputNoPO AND ListKainPO.StatusRetur = 1
+WHERE ListPO.No_PO = @inputNoPO AND ListKainPO.No_PO = @inputNoPO AND ListKainPO.StatusRetur = 0
 ORDER BY Sampel, Warna
 GO
 
-exec GetDetailPOForRetur 1
+exec GetDetailPOForRetur 5
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 35*/
--- Warna
+-- buat Retur
 --@param -
---@return Warna
+--@return 
 USE GordenDB
 GO
 CREATE OR ALTER PROC createRetur
@@ -884,11 +887,17 @@ CREATE OR ALTER PROC createRetur
 	@inputKain VARCHAR(8000)
 AS
 INSERT Retur
-	(Tanggal,No_PO,Keterangan)
+	(Tanggal,No_PO,Keterangan,Total_Pcs,Total_Meter)
 VALUES
-	(@inputTanggal, @inputNoPO, @inputKeterangan)
+	(@inputTanggal, @inputNoPO, @inputKeterangan, 0, 0)
 
-DECLARE @i INT, @idxKain INT, @temp VARCHAR(8000)
+DECLARE @i INT, @idxKain INT, @temp VARCHAR(8000),@totalPcs INT, @totalMeter FLOAT,@noRetur INT
+
+SET @noRetur = (SELECT MAX(No_Retur) 
+FROM Retur)
+
+SET @totalPcs = 0
+SET @totalMeter = 0
 SET @i = 1
 SET @temp = @inputKain
 
@@ -897,16 +906,43 @@ WHILE LEN(@temp) != 0
 	SET @i = CHARINDEX(',',@temp)
 	SET @idxKain = CAST(SUBSTRING(@temp,1, @i-1) as INT)
 
-	UPDATE ListKainPO SET StatusRetur = 0 WHERE Id_Kain = @idxKain AND No_PO = @inputNoPO
+	UPDATE ListKainPO SET StatusRetur = @noRetur WHERE Id_Kain = @idxKain AND No_PO = @inputNoPO
 	UPDATE Kain SET Status = 1 , TanggalKeluar = NULL WHERE Id_Kain = @idxKain
+
+	SET @totalPcs = @totalPcs + 1
+	SET @totalMeter = @totalMeter + (SELECT Meter
+	FROM Kain
+	WHERE Id_Kain = @idxKain)
 
 	SET @i = @i+1
 	SET @temp = SUBSTRING(@temp ,@i,LEN(@temp))
-END
+	END
+
+UPDATE Retur SET Total_Pcs = @totalPcs, Total_Meter = @totalMeter WHERE No_Retur = @noRetur
+
+SELECT @noRetur as 'No_Retur'
 GO
-SELECT * FROM ListKainPO
-SELECT * FROM Retur
+
 -- exec createRetur 
+--------------------------------------------------------------------------------------------------
+/*Procedure No. 36*/
+-- Detail Retur
+--@param -
+--@return -
+USE GordenDB
+GO
+CREATE OR ALTER PROC GetDetailRetur
+	@inputNoRetur INTEGER
+AS
+SELECT DISTINCT No_Retur , Retur.No_PO, KodePenjual, Pembeli, Alamat, ListPO.Tanggal as 'TanggalPO' , Retur.Tanggal as 'TanggalRetur', ListPO.[Jenis Kain], ListPO.Sampel, NomorWarna, ListPO.Warna, ListPO.NomorKarung, ListPO.Meter, Retur.Keterangan, Retur.Total_Pcs, Retur.Total_Meter
+FROM Retur
+	JOIN ListKainPO on Retur.No_Retur = ListKainPO.StatusRetur
+	JOIN ListStockKain on ListStockKain.Id_Kain = ListKainPO.Id_Kain
+	JOIN ListPO on Retur.No_PO = ListPO.No_PO
+WHERE StatusRetur = @inputNoRetur
+GO
+
+-- exec GetDetailRetur 4
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 /*****List View*****/
@@ -948,7 +984,6 @@ AS
 		JOIN Pembeli ON PurchaseOrder.Id_Pembeli = Pembeli.Id_Pembeli
 		JOIN ListKainPO ON PurchaseOrder.No_PO = ListKainPO.No_PO
 		JOIN ListStockKain ON ListKainPO.Id_Kain = ListStockKain.Id_Kain
-	WHERE ListKainPO.StatusRetur = 1
 GO
 
 SELECT *

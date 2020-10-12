@@ -126,9 +126,10 @@ CREATE TABLE Retur
 	No_Retur INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
 	Tanggal DATE NOT NULL,
 	No_PO INT FOREIGN KEY REFERENCES PurchaseOrder(No_PO),
-	Keterangan VARCHAR(500)
+	Keterangan VARCHAR(500),
+	Total_Pcs INT ,
+	Total_Meter FLOAT
 )
-
 
 GO
 
