@@ -614,7 +614,7 @@ BEGIN
 END
 GO
 
-exec GetStock 1
+exec GetStock 0
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 22*/
 --insert Jenis Kain Baru
@@ -934,15 +934,33 @@ GO
 CREATE OR ALTER PROC GetDetailRetur
 	@inputNoRetur INTEGER
 AS
-SELECT DISTINCT No_Retur , Retur.No_PO, KodePenjual, Pembeli, Alamat, ListPO.Tanggal as 'TanggalPO' , Retur.Tanggal as 'TanggalRetur', ListPO.[Jenis Kain], ListPO.Sampel, NomorWarna, ListPO.Warna, ListPO.NomorKarung, ListPO.Meter, Retur.Keterangan, Retur.Total_Pcs, Retur.Total_Meter
+SELECT No_Retur, Retur.No_PO, Penjual.Kode as 'KodePenjual',Pembeli.Nama as 'Pembeli',Pembeli.Alamat, PurchaseOrder.Tanggal as 'TanggalPO', Retur.Tanggal as 'TanggalRetur', ListStockKain.[Jenis Kain], ListStockKain.Sampel, ListStockKain.NomorWarna,ListStockKain.Warna, ListStockKain.NomorKarung, ListStockKain.Meter, Retur.Keterangan, Retur.Total_Pcs, Retur.Total_Meter
 FROM Retur
 	JOIN ListKainPO on Retur.No_Retur = ListKainPO.StatusRetur
-	JOIN ListStockKain on ListStockKain.Id_Kain = ListKainPO.Id_Kain
-	JOIN ListPO on Retur.No_PO = ListPO.No_PO
+	JOIN PurchaseOrder on PurchaseOrder.No_PO = Retur.No_PO
+	JOIN Penjual on Penjual.Id_Penjual = PurchaseOrder.Id_Penjual
+	JOIN Pembeli on Pembeli.Id_Pembeli = PurchaseOrder.Id_Pembeli
+	JOIN ListStockKain on ListKainPO.Id_Kain = ListStockKain.Id_Kain
 WHERE StatusRetur = @inputNoRetur
 GO
 
--- exec GetDetailRetur 4
+exec GetDetailRetur 2
+--------------------------------------------------------------------------------------------------
+/*Procedure No. 37*/
+-- Detail Retur
+--@param -
+--@return -
+USE GordenDB
+GO
+CREATE OR ALTER PROC GetListRetur
+AS
+SELECT DISTINCT No_Retur, Retur.No_PO, Retur.Tanggal as 'TanggalRetur', ListPO.Tanggal as 'TanggalPO' ,KodePenjual , Pembeli,Alamat
+FROM Retur
+	JOIN ListPO ON ListPO.No_PO = Retur.No_PO
+ORDER BY No_Retur
+GO
+
+-- exec GetListRetur
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 /*****List View*****/

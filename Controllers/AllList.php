@@ -11,6 +11,7 @@ class AllList extends Controller implements ViewInterface
             <a href="sj" class="w3-bar-item w3-button">SJ</a>
             <a href="alllist" class="w3-bar-item w3-button w3-gray">AllList</a>
             <a href="retur" class="w3-bar-item w3-button">Retur</a>
+            <a href="listretur" class="w3-bar-item w3-button">ListRetur</a>
             </div>';
     }
 

@@ -44,7 +44,11 @@ if (isset($_COOKIE["userpermission"])) {
         });
 
         Route::set('retur', function () {
-            PO::CreateView('Retur');
+            Retur::CreateView('Retur');
+        });
+
+        Route::set('listretur', function () {
+            ListRetur::CreateView('ListRetur');
         });
 
         //Function
@@ -89,6 +93,11 @@ if (isset($_COOKIE["userpermission"])) {
         Route::set('ReturHandler', function () {
             Controller::SubmitForm("ReturHandler");
             header("Location: retur");
+        });
+
+        Route::set('ListReturHandler', function () {
+            Controller::SubmitForm("ListReturHandler");
+            header("Location: listretur");
         });
 
         Route::set('POPDF', function () {
