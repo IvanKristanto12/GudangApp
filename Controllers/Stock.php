@@ -50,7 +50,6 @@ class Stock extends Controller implements ViewInterface
         if ($_COOKIE["userpermission"] == 0) {
             self::modalTambah();
             echo '<script src="Assets/script/modalTambah.js"></script>';
-
         }
         self::CetakStock();
         // self::listStock();
@@ -85,20 +84,27 @@ class Stock extends Controller implements ViewInterface
             
         </table>
         <div class="w3-border" style="width:100%; height:75%; overflow-y:scroll">
-        <table class="w3-table w3-border">
-        <tr class="w3-text-black w3-yellow">
+        <table class="w3-table w3-border">';
+        $result = self::$db->executeQuery("GetTotalStock", [1]);
+        echo '
+        <tr class="w3-text-black w3-light-blue">
+            <th class="w3-center w3-border column1" colspan="5"> STOCK </th>
+            
+            <th class="w3-center w3-border columnTotal">' . $result[0]["TotalPcs"] . '</th>
+            <th class="w3-center w3-border columnTotal">' . $result[0]["TotalMeter"] . '</th>
+        </tr>';
+        echo '<tr class="w3-text-black w3-yellow">
                 <th class="w3-center w3-border column1" >NAMA BARANG</th>
                 <th class="w3-center w3-border column2" colspan="2">WARNA</th>
                 <th class="w3-center w3-border column3">PCS</th>
                 <th class="w3-center w3-border column4">METER</th>
                 <th class="w3-center w3-border column5" colspan="2">TOTAL</th>
-            </tr>
-            </tr>
-            </tr>';
+        </tr>';
         $result = self::$db->executeQuery("GetStock", [0]);
         $nama = "";
         $sumPcs = 0;
         $sumMeter = 0;
+        $jenisKain = "";
         for ($i = 0; $i < count($result); $i++) {
             $nomorWarna = $result[$i]["NomorWarna"];
             $warna = $result[$i]["Warna"];
@@ -132,6 +138,11 @@ class Stock extends Controller implements ViewInterface
                 }
                 $sumPcs += $totalPcs;
                 $sumMeter += $totalMeter;
+                if (strcmp($jenisKain, $result[$i]["JenisKain"]) != 0) {
+                    echo '<tr>
+                    <th class="w3-border  w3-text-black w3-center " colspan="7">' . $result[$i]["JenisKain"] . '</th>
+                </tr>';
+                }
                 echo '<tr>
                     <th class="w3-border w3-light-green w3-text-black " colspan="7">' . $result[$i]["Sampel"] . '</th>
                 </tr>

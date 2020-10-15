@@ -589,9 +589,11 @@ BEGIN
 	GROUP BY Sampel.Nama, Warna.Nama , Warna.NomorWarna
 	ORDER BY Sampel.Nama, Warna.Nama , Warna.NomorWarna
 
-	SELECT ListSampelWarna.Id_Sampel, ListSampelWarna.Sampel, ListSampelWarna.Id_Warna, ListSampelWarna.Warna, a.NomorWarna, a.TotalPcs, a.TotalMeter
+	SELECT ListSampelWarna.Id_Sampel, JenisKain.Nama as 'JenisKain' , ListSampelWarna.Sampel, ListSampelWarna.Id_Warna, ListSampelWarna.Warna, a.NomorWarna, a.TotalPcs, a.TotalMeter
 	FROM @a as a
 		RIGHT OUTER JOIN ListSampelWarna ON ListSampelWarna.Sampel = a.Sampel AND ListSampelWarna.Warna = a.Warna
+		JOIN Sampel on ListSampelWarna.Id_Sampel = Sampel.Id_Sampel
+		JOIN JenisKain on JenisKain.Id_JenisKain = Sampel.Id_JenisKain
 	ORDER BY ListSampelWarna.Sampel , ListSampelWarna.Warna
 END
 ELSE
@@ -606,9 +608,11 @@ BEGIN
 	GROUP BY Sampel.Nama, Warna.Nama , Warna.NomorWarna
 	ORDER BY Sampel.Nama, Warna.Nama , Warna.NomorWarna
 
-	SELECT ListSampelWarna.Id_Sampel, ListSampelWarna.Sampel, ListSampelWarna.Id_Warna, ListSampelWarna.Warna, a.NomorWarna, a.TotalPcs, a.TotalMeter
+	SELECT ListSampelWarna.Id_Sampel, JenisKain.Nama as 'JenisKain' , ListSampelWarna.Sampel, ListSampelWarna.Id_Warna, ListSampelWarna.Warna, a.NomorWarna, a.TotalPcs, a.TotalMeter
 	FROM @a as a
 		RIGHT OUTER JOIN ListSampelWarna ON ListSampelWarna.Sampel = a.Sampel AND ListSampelWarna.Warna = a.Warna
+		JOIN Sampel on ListSampelWarna.Id_Sampel = Sampel.Id_Sampel
+		JOIN JenisKain on JenisKain.Id_JenisKain = Sampel.Id_JenisKain
 	WHERE ListSampelWarna.Id_Sampel = @inputIdSampel
 	ORDER BY ListSampelWarna.Sampel , ListSampelWarna.Warna
 END
@@ -893,7 +897,7 @@ VALUES
 
 DECLARE @i INT, @idxKain INT, @temp VARCHAR(8000),@totalPcs INT, @totalMeter FLOAT,@noRetur INT
 
-SET @noRetur = (SELECT MAX(No_Retur) 
+SET @noRetur = (SELECT MAX(No_Retur)
 FROM Retur)
 
 SET @totalPcs = 0
@@ -916,7 +920,7 @@ WHILE LEN(@temp) != 0
 
 	SET @i = @i+1
 	SET @temp = SUBSTRING(@temp ,@i,LEN(@temp))
-	END
+END
 
 UPDATE Retur SET Total_Pcs = @totalPcs, Total_Meter = @totalMeter WHERE No_Retur = @noRetur
 
@@ -934,7 +938,7 @@ GO
 CREATE OR ALTER PROC GetDetailRetur
 	@inputNoRetur INTEGER
 AS
-SELECT No_Retur, Retur.No_PO, Penjual.Kode as 'KodePenjual',Pembeli.Nama as 'Pembeli',Pembeli.Alamat, PurchaseOrder.Tanggal as 'TanggalPO', Retur.Tanggal as 'TanggalRetur', ListStockKain.[Jenis Kain], ListStockKain.Sampel, ListStockKain.NomorWarna,ListStockKain.Warna, ListStockKain.NomorKarung, ListStockKain.Meter, Retur.Keterangan, Retur.Total_Pcs, Retur.Total_Meter
+SELECT No_Retur, Retur.No_PO, Penjual.Kode as 'KodePenjual', Pembeli.Nama as 'Pembeli', Pembeli.Alamat, PurchaseOrder.Tanggal as 'TanggalPO', Retur.Tanggal as 'TanggalRetur', ListStockKain.[Jenis Kain], ListStockKain.Sampel, ListStockKain.NomorWarna, ListStockKain.Warna, ListStockKain.NomorKarung, ListStockKain.Meter, Retur.Keterangan, Retur.Total_Pcs, Retur.Total_Meter
 FROM Retur
 	JOIN ListKainPO on Retur.No_Retur = ListKainPO.StatusRetur
 	JOIN PurchaseOrder on PurchaseOrder.No_PO = Retur.No_PO
@@ -954,13 +958,29 @@ USE GordenDB
 GO
 CREATE OR ALTER PROC GetListRetur
 AS
-SELECT DISTINCT No_Retur, Retur.No_PO, Retur.Tanggal as 'TanggalRetur', ListPO.Tanggal as 'TanggalPO' ,KodePenjual , Pembeli,Alamat
+SELECT DISTINCT No_Retur, Retur.No_PO, Retur.Tanggal as 'TanggalRetur', ListPO.Tanggal as 'TanggalPO' , KodePenjual , Pembeli, Alamat
 FROM Retur
 	JOIN ListPO ON ListPO.No_PO = Retur.No_PO
 ORDER BY No_Retur
 GO
 
 -- exec GetListRetur
+--------------------------------------------------------------------------------------------------
+/*Procedure No. 38*/
+-- Get Total Stock
+--@param 0 not in stock, 1 in stock
+--@return -
+USE GordenDB
+GO
+CREATE OR ALTER PROC GetTotalStock
+	@inputStatus INT
+AS
+SELECT COUNT(Id_Kain) as 'TotalPcs' , SUM(Meter) as 'TotalMeter'
+FROM Kain
+WHERE [Status] = @inputStatus
+GO
+
+exec GetTotalStock 1
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 /*****List View*****/

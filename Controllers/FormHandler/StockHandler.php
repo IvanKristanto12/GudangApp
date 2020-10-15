@@ -57,4 +57,5 @@ if (isset($_GET['submitTambahStock'])) {
     }
 } else if (isset($_GET["CetakStock"])) {
     $_SESSION["StockPDF"] = self::$db->executeQuery("GetStock", [0]);
+    $_SESSION["StockTotal"] = self::$db->executeQuery("GetTotalStock", [1]);
 }
