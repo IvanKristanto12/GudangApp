@@ -982,6 +982,21 @@ GO
 
 exec GetTotalStock 1
 --------------------------------------------------------------------------------------------------
+/*Procedure No. 39*/
+-- Change Kain
+--@param 
+--@return -
+USE GordenDB
+GO
+CREATE OR ALTER PROC ChangeMeterKain
+	@inputIdKain INT,
+	@inputMeter FLOAT
+AS
+UPDATE Kain SET Meter = @inputMeter WHERE Id_Kain = @inputIdKain
+GO
+
+exec ChangeMeterKain 1 , 100
+--------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 /*****List View*****/
 SELECT

@@ -67,6 +67,12 @@ class PO extends Controller implements ViewInterface
                 echo '<div class="w3-text-black w3-green w3-center w3-border w3-large"><b> PO CREATED </b></div>';
             }
         }
+        if (isset($_SESSION["changeMeter"])) {
+            if ($_SESSION["changeMeter"] == true) {
+                echo '<div class="w3-text-black w3-green w3-center w3-border w3-large"><b> Ubah Meter Done </b></div>';
+                unset($_SESSION["changeMeter"]);
+            }
+        }
 
         //kiri
         echo '
@@ -138,6 +144,7 @@ class PO extends Controller implements ViewInterface
                         <th class="w3-center">Nomor Karung</th>
                         <th class="w3-center">Meter</th>
                         <th class="w3-center">Tanggal Masuk</th>
+                        <th class="w3-center">Ubah Meter</th>
                     </tr>';
 
         // $result = self::$db->executeQuery("GetListKain", ["1"]);

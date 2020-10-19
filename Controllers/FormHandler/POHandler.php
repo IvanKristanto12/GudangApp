@@ -13,6 +13,11 @@ if (isset($_GET["submitCreatePO"])) {
     $result = self::$db->executeQuery("GetDetailPO",["0"]);
     $_SESSION["POPDF"] = $result;
     $_SESSION["po"] = true;
+}else if(isset($_GET["submitUbahMeter"])){
+    $idKain = $_GET["idUbah"];
+    $meter = $_GET["inputMeter"];
+    self::$db->executeNonQuery("ChangeMeterKain", [$idKain,$meter]);
+    $_SESSION["changeMeter"] = true;
 }
 
 

@@ -39,6 +39,7 @@ class AJAX extends Controller
             <th class="w3-center">Nomor Karung</th>
             <th class="w3-center">Meter</th>
             <th class="w3-center">Tanggal Masuk</th>
+            <th class="w3-center">Ubah Meter</th>
         </tr>';
         $result = self::$db->executeQuery("GetListKainBySO", [$NoSO]);
         for ($i = 0; $i < count($result); $i++) {
@@ -50,6 +51,13 @@ class AJAX extends Controller
                 <td class="w3-center">' . $result[$i]["NomorKarung"] . '</td>
                 <td id="meter" class="w3-center">' . $result[$i]["Meter"] . '</td>
                 <td class="w3-center">' . $result[$i]["TanggalMasuk"] . '</td>
+                <th class="w3-center">
+                    <form method="GET" action="POHandler">
+                    <input type="hidden" name="idUbah"value="' . $result[$i]["Id_Kain"] . '"/>
+                    <input class="w3-input w3-border" name="inputMeter" type="number" min="0" value="' . $result[$i]["Meter"] . '"/>
+                    <input class="w3-input w3-red w3-center w3-text-black" name="submitUbahMeter" value="Ubah" type="submit">
+                    </form>
+                </th>
             </tr>
         ';
         }
