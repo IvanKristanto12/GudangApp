@@ -77,13 +77,14 @@ class ListRetur extends Controller implements ViewInterface
         for ($i = 0; $i < count($result); $i++) {
             $noRetur = "R/".$result[$i]["No_Retur"];
             $kodePO = substr(($result[$i]["No_PO"] * 1 + 100000) . '', 1, 6) . '/PO/' . (substr($result[$i]["TanggalPO"] . '', 0, 4) * 1 - 2000) . "/" . substr($result[$i]["TanggalPO"], 5, 2) . "/" . $result[$i]["KodePenjual"];
-            $tanggal = $result[$i]["TanggalRetur"];
+            $tanggal = date_create($result[$i]["TanggalRetur"]);
+            
             $pembeli = $result[$i]["Pembeli"] ." - ". $result[$i]["Alamat"];
             echo '
             <tr>
             <td class="w3-center">' . ($i + 1) . '</td>
             <td class="w3-center">' . $noRetur. '</td>
-            <td class="w3-center">' . $tanggal. '</td>
+            <td class="w3-center">' . date_format($tanggal,"d/m/Y"). '</td>
             <td class="w3-center">' . $kodePO. '</td>
             <td class="w3-center">' . $pembeli. '</td>
             <th class="w3-center"><button class="w3-button w3-green w3-text-black" name="CetakRetur" value=' . $result[$i]["No_Retur"] . '>Cetak Retur</button></th>

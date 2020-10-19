@@ -43,19 +43,30 @@ class AJAX extends Controller
         </tr>';
         $result = self::$db->executeQuery("GetListKainBySO", [$NoSO]);
         for ($i = 0; $i < count($result); $i++) {
+            $tanggal = $result[$i]["TanggalMasuk"];
+            $tanggal = date_create($tanggal);
             $respondText .= '
             <tr>
-                <td class="w3-center"><input class="checkSize" value="' . $result[$i]["Id_Kain"] . '" type="checkbox" onchange="setTotal()"/></td>
-                <td class="w3-center">' . $result[$i]["Sampel"] . '</td>
-                <td class="w3-center">' . $result[$i]["Warna"] . '</td>
-                <td class="w3-center">' . $result[$i]["NomorKarung"] . '</td>
-                <td id="meter" class="w3-center">' . $result[$i]["Meter"] . '</td>
-                <td class="w3-center">' . $result[$i]["TanggalMasuk"] . '</td>
-                <th class="w3-center">
+                <td style="padding:0px; padding-top:18px" class="w3-center"><input class="checkSize" value="' . $result[$i]["Id_Kain"] . '" type="checkbox" onchange="setTotal()"/></td>
+                <td style="padding:0px; padding-top:18px" class="w3-center">' . $result[$i]["Sampel"] . '</td>';
+            if ($result[$i]["NomorWarna"] == null) {
+                $respondText .= '<td style="padding:0px; padding-top:18px" class="w3-center">' . $result[$i]["Warna"] . '</td>';
+            } else {
+                $respondText .= '<td style="padding:0px; padding-top:18px" class="w3-center">' . $result[$i]["Warna"] . '-' . $result[$i]["NomorWarna"] . '</td>';
+            }
+
+            $respondText .= '<td style="padding:0px; padding-top:18px" class="w3-center">' . $result[$i]["NomorKarung"] . '</td>
+                <td style="padding:0px; padding-top:18px" id="meter" class="w3-center">' . $result[$i]["Meter"] . '</td>
+                <td style="padding:0px; padding-top:18px" class="w3-center">' . date_format($tanggal, "d/m/Y") . '</td>
+                <th style="padding:0px; padding-top:10px; padding-right:5px; padding-left:5px">
                     <form method="GET" action="POHandler">
-                    <input type="hidden" name="idUbah"value="' . $result[$i]["Id_Kain"] . '"/>
-                    <input class="w3-input w3-border" name="inputMeter" type="number" min="0" value="' . $result[$i]["Meter"] . '"/>
-                    <input class="w3-input w3-red w3-center w3-text-black" name="submitUbahMeter" value="Ubah" type="submit">
+                    <input type="hidden" name="idUbah" value="' . $result[$i]["Id_Kain"] . '"/>
+                    <table class="w3-table" >
+                        <tr>
+                            <td style="padding:0px; width:120px"><input class="w3-input" name="inputMeter" type="number" min="0" value="' . $result[$i]["Meter"] . '"/></td>
+                            <th style="padding:0px;"><input class="w3-button w3-red w3-center w3-text-black" name="submitUbahMeter" value="Ubah" type="submit"></th>
+                        </tr>
+                    </table>
                     </form>
                 </th>
             </tr>

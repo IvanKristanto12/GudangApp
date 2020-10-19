@@ -100,15 +100,18 @@ class AllList extends Controller implements ViewInterface
             $noPO = substr(($result[$i]["No_PO"] * 1 + 100000) . '', 1, 6) . '/PO/' . (substr($result[$i]["Tanggal PO"] . '', 0, 4) * 1 - 2000) . "/" . substr($result[$i]["Tanggal PO"], 5, 2) . "/" . $result[$i]["Kode"];
             $noSJ = substr(($result[$i]["No_PO"] * 1 + 100000) . '', 1, 6) . '/SJ/' . (substr($result[$i]["Tanggal PO"] . '', 0, 4) * 1 - 2000) . "/" . substr($result[$i]["Tanggal PO"], 5, 2) . "/" . $result[$i]["Kode"];
 
+            $tanggalSO = date_create($result[$i]["Tanggal SO"]);
+            $tanggalPO = date_create($result[$i]["Tanggal PO"]);
+            $tanggalSJ = date_create($result[$i]["Tanggal SJ"]);
             echo '
             <tr>
             <td class="w3-center">' . ($i + 1) . '</td>
             <td class="w3-center">' . $noSO . '</td>
-            <td class="w3-center">' . $result[$i]["Tanggal SO"] . '</td>
+            <td class="w3-center">' . date_format($tanggalSO, "d/m/Y") . '</td>
             <td class="w3-center">' . $noPO . '</td>
-            <td class="w3-center">' . $result[$i]["Tanggal PO"] . '</td>
+            <td class="w3-center">' . date_format($tanggalPO, "d/m/Y") . '</td>
             <td class="w3-center">' . $noSJ . '</td>
-            <td class="w3-center">' . $result[$i]["Tanggal SJ"] . '</td>
+            <td class="w3-center">' . date_format($tanggalSJ, "d/m/Y") . '</td>
             <th class="w3-center"><button class="w3-button w3-green w3-text-black" name="CetakSO" value=' . $result[$i]["No_SO"] . '>Cetak SO</button></th>
             <th class="w3-center"><button class="w3-button w3-green w3-text-black" name="CetakPO" value=' . $result[$i]["No_PO"] . '>Cetak PO</button></th>
             <th class="w3-center"><button class="w3-button w3-green w3-text-black" name="CetakSJ" value=' . $result[$i]["No_SJ"] . '>Cetak SJ</button></th>

@@ -798,7 +798,7 @@ CREATE OR ALTER PROC GetListKainBySO
 	@inputNoSO INT
 AS
 
-SELECT DISTINCT Id_Kain, NomorKarung, Meter, TanggalMasuk, Sampel, Warna, "Jenis Kain"
+SELECT DISTINCT Id_Kain, NomorKarung, Meter, TanggalMasuk, Sampel, Warna, "NomorWarna","Jenis Kain"
 -- SELECT DISTINCT *
 FROM ListStockKain
 	JOIN ListSampelSO as a ON a.Id_Sampel = ListStockKain.Id_Sampel
@@ -807,7 +807,7 @@ WHERE Status = 1 AND a.No_SO = @inputNoSO
 ORDER BY Sampel , Warna
 GO
 
-exec GetListKainBySO 1
+exec GetListKainBySO 5
 
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 31*/
