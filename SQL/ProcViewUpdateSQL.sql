@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------------------------
 /*****List Function*****/
-SELECT *
-FROM GordenDB.INFORMATION_SCHEMA.ROUTINES
-WHERE ROUTINE_TYPE = 'PROCEDURE'
+-- SELECT *
+-- FROM GordenDB.INFORMATION_SCHEMA.ROUTINES
+-- WHERE ROUTINE_TYPE = 'PROCEDURE'
 /*Query Function*/
 
 --Function No. 1
@@ -11,7 +11,7 @@ WHERE ROUTINE_TYPE = 'PROCEDURE'
 --@return input yang sudah di hash MD5
 Use GordenDB
 GO
-CREATE FUNCTION createPass (@input VARCHAR(50))
+CREATE OR ALTER FUNCTION createPass (@input VARCHAR(50))
 RETURNS NVARCHAR(32)
 AS BEGIN
 	DECLARE @Work NVARCHAR(32)
@@ -22,9 +22,9 @@ GO
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 /*****List Procedure*****/
-SELECT *
-FROM GordenDB.INFORMATION_SCHEMA.ROUTINES
-WHERE ROUTINE_TYPE = 'PROCEDURE'
+-- SELECT *
+-- FROM GordenDB.INFORMATION_SCHEMA.ROUTINES
+-- WHERE ROUTINE_TYPE = 'PROCEDURE'
 
 --------------------------------------------------------------------------------------------------
 /*****Query Procedure*****/
@@ -43,7 +43,7 @@ WHERE Status = @inputStatus
 ORDER BY Sampel , Warna
 GO
 
-exec GetListKain 1
+-- exec GetListKain 1
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 2*/
 --List All PO for Retur
@@ -61,7 +61,7 @@ WHERE StatusRetur = 0
 ORDER BY ListPO.No_PO
 GO
 
-exec GetListPOForRetur
+-- exec GetListPOForRetur
 
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 3*/
@@ -76,7 +76,7 @@ SELECT *
 FROM ListSJ
 GO
 
-exec GetListSJ
+-- exec GetListSJ
 
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 4*/
@@ -104,52 +104,52 @@ FROM @a as a
 ORDER BY Sampel
 GO
 
-exec GetListSampel
+-- exec GetListSampel
 
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 5*/
 --List Warna Sampel 
 --@param nama Sampel
 --@return table 
-USE GordenDB
-GO
-CREATE OR ALTER PROC GetListWarnaSampel
-	@inputNamaSampel VARCHAR(50)
-AS
-DECLARE @a TABLE (NomorKarung INT,
-	Meter FLOAT,
-	TanggalMasuk DATE,
-	Sampel VARCHAR(50),
-	Warna VARCHAR(50))
-INSERT INTO @a
-SELECT NomorKarung, Meter , TanggalMasuk , Sampel , Warna
-FROM ListStockKain
-WHERE Status = 1 AND Sampel = @inputNamaSampel
+-- USE GordenDB
+-- GO
+-- CREATE OR ALTER PROC GetListWarnaSampel
+-- 	@inputNamaSampel VARCHAR(50)
+-- AS
+-- DECLARE @a TABLE (NomorKarung INT,
+-- 	Meter FLOAT,
+-- 	TanggalMasuk DATE,
+-- 	Sampel VARCHAR(50),
+-- 	Warna VARCHAR(50))
+-- INSERT INTO @a
+-- SELECT NomorKarung, Meter , TanggalMasuk , Sampel , Warna
+-- FROM ListStockKain
+-- WHERE Status = 1 AND Sampel = @inputNamaSampel
 
-DECLARE @b TABLE (Sampel VARCHAR(50) ,
-	Warna VARCHAR(50))
-INSERT INTO @b
-SELECT *
-FROM ListSampelWarna
-WHERE Sampel = @inputNamaSampel
+-- DECLARE @b TABLE (Sampel VARCHAR(50) ,
+-- 	Warna VARCHAR(50))
+-- INSERT INTO @b
+-- SELECT *
+-- FROM ListSampelWarna
+-- WHERE Sampel = @inputNamaSampel
 
-DECLARE @c TABLE (Warna VARCHAR(50) ,
-	Total_Pcs INT ,
-	Total_Meter FLOAT)
-INSERT INTO @c
-SELECT Warna, COUNT(Warna) as Total_Pcs , SUM(Meter) as Total_Meter
-FROM ListStockKain
-WHERE Status = 1 AND Sampel = @inputNamaSampel
-GROUP BY Warna
+-- DECLARE @c TABLE (Warna VARCHAR(50) ,
+-- 	Total_Pcs INT ,
+-- 	Total_Meter FLOAT)
+-- INSERT INTO @c
+-- SELECT Warna, COUNT(Warna) as Total_Pcs , SUM(Meter) as Total_Meter
+-- FROM ListStockKain
+-- WHERE Status = 1 AND Sampel = @inputNamaSampel
+-- GROUP BY Warna
 
-SELECT NomorKarung, Meter, TanggalMasuk, b.Warna , c.Total_Pcs , c.Total_Meter
-FROM @a as a
-	RIGHT OUTER JOIN @b as b ON a.Warna = b.Warna
-	LEFT OUTER JOIN @c as c ON b.Warna = c.Warna
-ORDER BY b.Warna
-GO
+-- SELECT NomorKarung, Meter, TanggalMasuk, b.Warna , c.Total_Pcs , c.Total_Meter
+-- FROM @a as a
+-- 	RIGHT OUTER JOIN @b as b ON a.Warna = b.Warna
+-- 	LEFT OUTER JOIN @c as c ON b.Warna = c.Warna
+-- ORDER BY b.Warna
+-- GO
 
-exec GetListWarnaSampel 'Anjing'
+-- exec GetListWarnaSampel 'Anjing'
 
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 6*/
@@ -165,7 +165,7 @@ FROM Kain
 WHERE Status = 1
 GO
 
-exec GetAllPcsAllMeter
+-- exec GetAllPcsAllMeter
 
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 7*/
@@ -224,7 +224,7 @@ UPDATE PurchaseOrder SET Total_Pcs = @totalPcs , Total_Meter = @totalMeter WHERE
 
 GO
 
-exec CreatePO '2020-07-31' , 1 , 1 , '2,',1,'Tidak ada'
+-- exec CreatePO '2020-07-31' , 1 , 1 , '2,',1,'Tidak ada'
 
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 8*/
@@ -264,7 +264,7 @@ WHILE LEN(@temp) != 0
 END
 GO
 
-exec InsertNewSampel 'Belalang' , 3, '1,2,3,4,'
+-- exec InsertNewSampel 'Belalang' , 3, '1,2,3,4,'
 
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 9*/
@@ -293,7 +293,7 @@ END
 END
 GO
 
-exec GetIdSampelIdWarna 1
+-- exec GetIdSampelIdWarna 1
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 10*/
 --Insert Stock
@@ -324,7 +324,7 @@ VALUES
 	(@idKain, @inputIdSampel, @inputIdWarna)
 GO
 
-exec InsertStock 12, 250,'2020-08-04', 1, 3
+-- exec InsertStock 12, 250,'2020-08-04', 1, 3
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 11*/
 --List Jenis Kain 
@@ -338,7 +338,7 @@ SELECT *
 FROM JenisKain
 GO
 
-exec GetListJenisKain
+-- exec GetListJenisKain
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 12*/
 --List Warna
@@ -353,7 +353,7 @@ FROM Warna
 ORDER BY Nama
 GO
 
-exec GetListWarna
+-- exec GetListWarna
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 13*/
 --List Penjual
@@ -368,7 +368,7 @@ FROM Penjual
 ORDER BY Nama
 GO
 
-exec GetListPenjual
+-- exec GetListPenjual
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 14*/
 --List Pembeli
@@ -383,7 +383,7 @@ FROM Pembeli
 ORDER BY Nama
 GO
 
-exec GetListPembeli
+-- exec GetListPembeli
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 15*/
 --Detail PO
@@ -415,7 +415,7 @@ END
 END
 GO
 
-exec GetDetailPO 1
+-- exec GetDetailPO 1
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 16*/
 --list PO
@@ -430,7 +430,7 @@ FROM PurchaseOrder
 WHERE Status =  0
 GO
 
-exec GetListPO
+-- exec GetListPO
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 17*/
 --create SJ
@@ -451,7 +451,7 @@ VALUES
 UPDATE PurchaseOrder SET Status = 1 WHERE No_PO = @inputNoPO
 GO
 
-exec CreateSJ '2020-08-30',1,''
+-- exec CreateSJ '2020-08-30',1,''
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 18*/
 --insert Warna Baru
@@ -498,7 +498,7 @@ END
 
 GO
 
-exec InsertWarnaBaru 'hitam',10
+-- exec InsertWarnaBaru 'hitam',10
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 19*/
 --insert Penjual Baru
@@ -528,7 +528,7 @@ END
 END
 GO
 
-exec InsertPenjualBaru 'Seller4' , 'S4'
+-- exec InsertPenjualBaru 'Seller4' , 'S4'
 
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 20*/
@@ -559,7 +559,7 @@ END
 END
 GO
 
-exec InsertPembeliBaru 'Buyer5' , 'Gunung'
+-- exec InsertPembeliBaru 'Buyer5' , 'Gunung'
 
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 21*/
@@ -618,7 +618,7 @@ BEGIN
 END
 GO
 
-exec GetStock 0
+-- exec GetStock 0
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 22*/
 --insert Jenis Kain Baru
@@ -647,7 +647,7 @@ END
 END
 GO
 
-exec InsertJenisKainBaru 'Vitrase'
+-- exec InsertJenisKainBaru 'Vitrase'
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 23*/
 --Get List All
@@ -665,7 +665,7 @@ FROM PurchaseOrder
 	JOIN SuratOrder on SuratOrder.No_SO = PurchaseOrder.No_SO
 GO
 
-exec GetListAll
+-- exec GetListAll
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 24*/
 --Get SJ Ket
@@ -681,7 +681,7 @@ FROM SuratJalan
 WHERE SuratJalan.No_PO = @inputNoPo
 GO
 
-exec GetSJKet 1
+-- exec GetSJKet 1
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 25*/
 --Login Auth
@@ -698,7 +698,7 @@ FROM Users
 WHERE Nama = @inputUserName AND Users.[Password] = dbo.createPass(@inputPassword) 
 GO
 
-exec LoginAuth 'admin' , 'admin'
+-- exec LoginAuth 'admin' , 'admin'
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 26*/
 --Insert SO
@@ -771,7 +771,7 @@ BEGIN
 END
 GO
 
-exec GetDetailSO 0 ,0
+-- exec GetDetailSO 0 ,0
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 29*/
 --Insert HapusSO
@@ -786,7 +786,7 @@ AS
 UPDATE SuratOrder SET Status = 2 WHERE No_SO = @inputNoSO
 GO
 
-exec HapusSO 1
+-- exec HapusSO 1
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 30*/
 --List Stock 
@@ -807,7 +807,7 @@ WHERE Status = 1 AND a.No_SO = @inputNoSO
 ORDER BY Sampel , Warna
 GO
 
-exec GetListKainBySO 5
+-- exec GetListKainBySO 5
 
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 31*/
@@ -825,7 +825,7 @@ FROM Sampel
 	JOIN JenisKain ON JenisKain.Id_JenisKain = Sampel.Id_JenisKain
 GO
 
-exec GetListDetailSampel
+-- exec GetListDetailSampel
 
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 32*/
@@ -842,7 +842,7 @@ FROM Sampel
 WHERE Id_Sampel = @inputId
 GO
 
-exec GetSampelById 1
+-- exec GetSampelById 1
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 33*/
 -- Warna
@@ -858,7 +858,7 @@ FROM Warna
 WHERE Id_Warna = @inputId
 GO
 
-exec GetWarnaById 1
+-- exec GetWarnaById 1
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 34*/
 -- List kain yang dapat di Retur
@@ -876,7 +876,7 @@ WHERE ListPO.No_PO = @inputNoPO AND ListKainPO.No_PO = @inputNoPO AND ListKainPO
 ORDER BY Sampel, Warna
 GO
 
-exec GetDetailPOForRetur 5
+-- exec GetDetailPOForRetur 5
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 35*/
 -- buat Retur
@@ -948,7 +948,7 @@ FROM Retur
 WHERE StatusRetur = @inputNoRetur
 GO
 
-exec GetDetailRetur 2
+-- exec GetDetailRetur 2
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 37*/
 -- Detail Retur
@@ -980,7 +980,7 @@ FROM Kain
 WHERE [Status] = @inputStatus
 GO
 
-exec GetTotalStock 1
+-- exec GetTotalStock 1
 --------------------------------------------------------------------------------------------------
 /*Procedure No. 39*/
 -- Change Kain
@@ -995,15 +995,15 @@ AS
 UPDATE Kain SET Meter = @inputMeter WHERE Id_Kain = @inputIdKain
 GO
 
-exec ChangeMeterKain 1 , 100
+-- exec ChangeMeterKain 1 , 100
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
 /*****List View*****/
-SELECT
-	OBJECT_SCHEMA_NAME(v.object_id) schema_name,
-	v.name
-FROM
-	sys.views as v;
+-- SELECT
+-- 	OBJECT_SCHEMA_NAME(v.object_id) schema_name,
+-- 	v.name
+-- FROM
+-- 	sys.views as v;
 
 --------------------------------------------------------------------------------------------------
 /*****View List*****/
@@ -1021,8 +1021,8 @@ AS
 		JOIN JenisKain ON Sampel.Id_JenisKain = JenisKain.Id_JenisKain
 GO
 
-SELECT *
-FROM ListStockKain
+-- SELECT *
+-- FROM ListStockKain
 --------------------------------------------------------------------------------------------------
 /*View No. 2*/
 --List PO
@@ -1039,8 +1039,8 @@ AS
 		JOIN ListStockKain ON ListKainPO.Id_Kain = ListStockKain.Id_Kain
 GO
 
-SELECT *
-FROM ListPO
+-- SELECT *
+-- FROM ListPO
 --------------------------------------------------------------------------------------------------
 /*View No. 3*/
 --List SJ
@@ -1053,8 +1053,8 @@ AS
 		JOIN SuratJalan ON PurchaseOrder.No_PO = SuratJalan.No_PO
 GO
 
-SELECT *
-FROM ListSJ
+-- SELECT *
+-- FROM ListSJ
 --------------------------------------------------------------------------------------------------
 /*View No. 4*/
 --List SampelWarna
@@ -1068,8 +1068,8 @@ AS
 		JOIN Warna ON Warna.Id_Warna = SampelWarna.Id_Warna
 GO
 
-SELECT *
-FROM ListSampelWarna
+-- SELECT *
+-- FROM ListSampelWarna
 ---------------------------------------------------------------------------------------------------
 /*View No. 5*/
 --List IdSampelIdWarna
@@ -1083,41 +1083,10 @@ AS
 		JOIN Warna ON Warna.Id_Warna = SampelWarna.Id_Warna
 GO
 
-SELECT *
-FROM ListIdSampelIdWarna
+-- SELECT *
+-- FROM ListIdSampelIdWarna
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
-SELECT *
-FROM Users
-SELECT *
-FROM Kain
-SELECT *
-FROM Warna
-SELECT *
-FROM Pembeli
-SELECT *
-FROM Penjual
-SELECT *
-FROM JenisKain
-SELECT *
-FROM Sampel
-SELECT *
-FROM SampelWarna
-SELECT *
-FROM KainSampelWarna
-SELECT *
-FROM PurchaseOrder
-SELECT *
-FROM ListKainPO
-SELECT *
-FROM SuratJalan
-SELECT *
-FROM SuratOrder
-SELECT *
-FROM ListSampelSO
-SELECT *
-FROM Retur
-
 --------------------------------------------------------------------------------------------------
 USE GordenDB
 GO
@@ -1154,7 +1123,7 @@ DBCC CHECKIDENT(SuratJalan,RESEED,0)
 DBCC CHECKIDENT(Retur,RESEED,0)
 GO
 
-exec resetDatabase
+-- exec resetDatabase
 --------------------------------------------------------------------------------------------------
 USE GordenDB
 GO
@@ -1177,7 +1146,7 @@ DROP TABLE Sampel
 DROP TABLE JenisKain
 GO
 
-exec dropAllTable
+-- exec dropAllTable
 --------------------------------------------------------------------------------------------------
 
 
